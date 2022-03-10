@@ -8,11 +8,9 @@ export interface usersAttributes {
   uid: string;
   level: number;
   username: string;
-  first_name?: string;
-  last_name?: string;
   is_reported: number;
   is_locked: number;
-  role: number;
+  role: string;
   is_otp: number;
   password: string;
   email: string;
@@ -27,8 +25,6 @@ export type usersId = users[usersPk];
 export type usersOptionalAttributes =
   | 'user_id'
   | 'uid'
-  | 'first_name'
-  | 'last_name'
   | 'updated_at'
   | 'created_at';
 export type usersCreationAttributes = Optional<
@@ -48,7 +44,7 @@ export class users
   last_name?: string;
   is_reported!: number;
   is_locked!: number;
-  role!: number;
+  role!: string;
   is_otp!: number;
   password!: string;
   email!: string;
@@ -101,14 +97,7 @@ export class users
           type: DataTypes.STRING(30),
           allowNull: false,
         },
-        first_name: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
-        last_name: {
-          type: DataTypes.STRING(45),
-          allowNull: true,
-        },
+
         is_reported: {
           type: DataTypes.BOOLEAN,
           allowNull: false,
@@ -118,7 +107,7 @@ export class users
           allowNull: false,
         },
         role: {
-          type: DataTypes.INTEGER,
+          type: DataTypes.STRING,
           allowNull: false,
         },
         is_otp: {
