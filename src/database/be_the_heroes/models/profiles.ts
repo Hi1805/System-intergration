@@ -7,18 +7,18 @@ export interface profilesAttributes {
   first_name: string;
   last_name: string;
   middle_name?: string;
-  date_of_birth: string;
+  date_of_birth?: string;
   phone?: string;
   status?: 'private' | 'public';
-  avatar: string;
-  cover_image: string;
-  users_user_id: number;
-  users_uid: string;
+  avatar?: string;
+  cover_image?: string;
+  users_user_id?: number;
+  users_uid?: string;
 }
 
 export type profilesPk = "uid";
 export type profilesId = profiles[profilesPk];
-export type profilesOptionalAttributes = "middle_name" | "phone" | "status";
+export type profilesOptionalAttributes = "middle_name" | "date_of_birth" | "phone" | "status" | "avatar" | "cover_image" | "users_user_id" | "users_uid";
 export type profilesCreationAttributes = Optional<profilesAttributes, profilesOptionalAttributes>;
 
 export class profiles extends Model<profilesAttributes, profilesCreationAttributes> implements profilesAttributes {
@@ -26,13 +26,13 @@ export class profiles extends Model<profilesAttributes, profilesCreationAttribut
   first_name!: string;
   last_name!: string;
   middle_name?: string;
-  date_of_birth!: string;
+  date_of_birth?: string;
   phone?: string;
   status?: 'private' | 'public';
-  avatar!: string;
-  cover_image!: string;
-  users_user_id!: number;
-  users_uid!: string;
+  avatar?: string;
+  cover_image?: string;
+  users_user_id?: number;
+  users_uid?: string;
 
   // profiles belongsTo users via uid
   uid_user!: users;
@@ -65,7 +65,7 @@ export class profiles extends Model<profilesAttributes, profilesCreationAttribut
     },
     date_of_birth: {
       type: DataTypes.DATEONLY,
-      allowNull: false
+      allowNull: true
     },
     phone: {
       type: DataTypes.STRING(12),
@@ -78,19 +78,19 @@ export class profiles extends Model<profilesAttributes, profilesCreationAttribut
     },
     avatar: {
       type: DataTypes.STRING(100),
-      allowNull: false
+      allowNull: true
     },
     cover_image: {
       type: DataTypes.STRING(100),
-      allowNull: false
+      allowNull: true
     },
     users_user_id: {
       type: DataTypes.BIGINT,
-      allowNull: false
+      allowNull: true
     },
     users_uid: {
       type: DataTypes.STRING(30),
-      allowNull: false
+      allowNull: true
     }
   }, {
     sequelize,
