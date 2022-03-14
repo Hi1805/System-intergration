@@ -11,7 +11,7 @@ export interface permissionsAttributes {
   avatar: string;
 }
 
-export type permissionsPk = "org_id" | "user_id";
+export type permissionsPk = "org_id";
 export type permissionsId = permissions[permissionsPk];
 export type permissionsCreationAttributes = permissionsAttributes;
 
@@ -47,7 +47,6 @@ export class permissions extends Model<permissionsAttributes, permissionsCreatio
     user_id: {
       type: DataTypes.BIGINT,
       allowNull: false,
-      primaryKey: true,
       references: {
         model: 'users',
         key: 'user_id'
@@ -76,7 +75,6 @@ export class permissions extends Model<permissionsAttributes, permissionsCreatio
         using: "BTREE",
         fields: [
           { name: "org_id" },
-          { name: "user_id" },
         ]
       },
       {

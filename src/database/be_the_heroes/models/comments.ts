@@ -56,7 +56,7 @@ export class comments extends Model<commentsAttributes, commentsCreationAttribut
   static initModel(sequelize: Sequelize.Sequelize): typeof comments {
     return comments.init({
     uid: {
-      type: DataTypes.STRING(30),
+      type: DataTypes.STRING(100),
       allowNull: false,
       references: {
         model: 'users',

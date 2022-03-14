@@ -98,10 +98,6 @@ export function initModels(sequelize: Sequelize) {
   const reviews = _reviews.initModel(sequelize);
   const users = _users.initModel(sequelize);
 
-  organizations.belongsToMany(users, { as: 'user_id_users', through: permissions, foreignKey: "org_id", otherKey: "user_id" });
-  users.belongsToMany(organizations, { as: 'org_id_organizations', through: permissions, foreignKey: "user_id", otherKey: "org_id" });
-  users.belongsToMany(users, { as: 'user_id_users_report_users', through: report_users, foreignKey: "uid_report", otherKey: "user_id" });
-  users.belongsToMany(users, { as: 'uid_report_users', through: report_users, foreignKey: "user_id", otherKey: "uid_report" });
   comments_photo.belongsTo(comments, { as: "comment", foreignKey: "comment_id"});
   comments.hasMany(comments_photo, { as: "comments_photos", foreignKey: "comment_id"});
   users.belongsTo(levels, { as: "level_level", foreignKey: "level"});
@@ -109,7 +105,7 @@ export function initModels(sequelize: Sequelize) {
   kyc_org.belongsTo(organizations, { as: "org", foreignKey: "org_id"});
   organizations.hasOne(kyc_org, { as: "kyc_org", foreignKey: "org_id"});
   permissions.belongsTo(organizations, { as: "org", foreignKey: "org_id"});
-  organizations.hasMany(permissions, { as: "permissions", foreignKey: "org_id"});
+  organizations.hasOne(permissions, { as: "permission", foreignKey: "org_id"});
   posts.belongsTo(organizations, { as: "org", foreignKey: "org_id"});
   organizations.hasMany(posts, { as: "posts", foreignKey: "org_id"});
   report_users.belongsTo(organizations, { as: "org", foreignKey: "org_id"});
@@ -128,18 +124,14 @@ export function initModels(sequelize: Sequelize) {
   reasons_report.hasMany(report_users, { as: "report_users", foreignKey: "reason_id"});
   comments.belongsTo(users, { as: "uid_user", foreignKey: "uid"});
   users.hasMany(comments, { as: "comments", foreignKey: "uid"});
-  kyc_personal.belongsTo(users, { as: "uid_user", foreignKey: "uid"});
-  users.hasMany(kyc_personal, { as: "kyc_personals", foreignKey: "uid"});
   permissions.belongsTo(users, { as: "user", foreignKey: "user_id"});
   users.hasMany(permissions, { as: "permissions", foreignKey: "user_id"});
   posts.belongsTo(users, { as: "user", foreignKey: "user_id"});
   users.hasMany(posts, { as: "posts", foreignKey: "user_id"});
-  profiles.belongsTo(users, { as: "uid_user", foreignKey: "uid"});
-  users.hasOne(profiles, { as: "profile", foreignKey: "uid"});
-  report_users.belongsTo(users, { as: "uid_report_user", foreignKey: "uid_report"});
-  users.hasMany(report_users, { as: "report_users", foreignKey: "uid_report"});
+  profiles.belongsTo(users, { as: "user", foreignKey: "user_id"});
+  users.hasOne(profiles, { as: "profile", foreignKey: "user_id"});
   report_users.belongsTo(users, { as: "user", foreignKey: "user_id"});
-  users.hasMany(report_users, { as: "user_report_users", foreignKey: "user_id"});
+  users.hasMany(report_users, { as: "report_users", foreignKey: "user_id"});
   reviews.belongsTo(users, { as: "uid_review_user", foreignKey: "uid_review"});
   users.hasMany(reviews, { as: "reviews", foreignKey: "uid_review"});
   reviews.belongsTo(users, { as: "user", foreignKey: "user_id"});

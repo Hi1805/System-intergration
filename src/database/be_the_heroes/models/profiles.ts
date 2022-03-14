@@ -3,7 +3,6 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import type { users, usersId } from './users';
 
 export interface profilesAttributes {
-  uid: string;
   first_name: string;
   last_name: string;
   middle_name?: string;
@@ -12,17 +11,15 @@ export interface profilesAttributes {
   status?: 'private' | 'public';
   avatar?: string;
   cover_image?: string;
-  users_user_id?: number;
-  users_uid?: string;
+  user_id: number;
 }
 
-export type profilesPk = "uid";
+export type profilesPk = "user_id";
 export type profilesId = profiles[profilesPk];
-export type profilesOptionalAttributes = "middle_name" | "date_of_birth" | "phone" | "status" | "avatar" | "cover_image" | "users_user_id" | "users_uid";
+export type profilesOptionalAttributes = "middle_name" | "date_of_birth" | "phone" | "status" | "avatar" | "cover_image";
 export type profilesCreationAttributes = Optional<profilesAttributes, profilesOptionalAttributes>;
 
 export class profiles extends Model<profilesAttributes, profilesCreationAttributes> implements profilesAttributes {
-  uid!: string;
   first_name!: string;
   last_name!: string;
   middle_name?: string;
@@ -31,26 +28,16 @@ export class profiles extends Model<profilesAttributes, profilesCreationAttribut
   status?: 'private' | 'public';
   avatar?: string;
   cover_image?: string;
-  users_user_id?: number;
-  users_uid?: string;
+  user_id!: number;
 
-  // profiles belongsTo users via uid
-  uid_user!: users;
-  getUid_user!: Sequelize.BelongsToGetAssociationMixin<users>;
-  setUid_user!: Sequelize.BelongsToSetAssociationMixin<users, usersId>;
-  createUid_user!: Sequelize.BelongsToCreateAssociationMixin<users>;
+  // profiles belongsTo users via user_id
+  user!: users;
+  getUser!: Sequelize.BelongsToGetAssociationMixin<users>;
+  setUser!: Sequelize.BelongsToSetAssociationMixin<users, usersId>;
+  createUser!: Sequelize.BelongsToCreateAssociationMixin<users>;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof profiles {
     return profiles.init({
-    uid: {
-      type: DataTypes.STRING(30),
-      allowNull: false,
-      primaryKey: true,
-      references: {
-        model: 'users',
-        key: 'uid'
-      }
-    },
     first_name: {
       type: DataTypes.STRING(100),
       allowNull: false
@@ -84,13 +71,14 @@ export class profiles extends Model<profilesAttributes, profilesCreationAttribut
       type: DataTypes.STRING(100),
       allowNull: true
     },
-    users_user_id: {
+    user_id: {
       type: DataTypes.BIGINT,
-      allowNull: true
-    },
-    users_uid: {
-      type: DataTypes.STRING(30),
-      allowNull: true
+      allowNull: false,
+      primaryKey: true,
+      references: {
+        model: 'users',
+        key: 'user_id'
+      }
     }
   }, {
     sequelize,
@@ -102,7 +90,7 @@ export class profiles extends Model<profilesAttributes, profilesCreationAttribut
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "uid" },
+          { name: "user_id" },
         ]
       },
     ]

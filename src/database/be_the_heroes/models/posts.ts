@@ -86,7 +86,7 @@ export class posts extends Model<postsAttributes, postsCreationAttributes> imple
       primaryKey: true
     },
     uid: {
-      type: DataTypes.STRING(30),
+      type: DataTypes.STRING(100),
       allowNull: true
     },
     org_id: {

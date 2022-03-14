@@ -11,7 +11,6 @@ export interface report_usersAttributes {
   user_id: number;
   reason_id: number;
   org_id: number;
-  reasons_report_reason_id: number;
 }
 
 export type report_usersPk = "report_id" | "uid_report" | "user_id";
@@ -26,7 +25,6 @@ export class report_users extends Model<report_usersAttributes, report_usersCrea
   user_id!: number;
   reason_id!: number;
   org_id!: number;
-  reasons_report_reason_id!: number;
 
   // report_users belongsTo organizations via org_id
   org!: organizations;
@@ -38,11 +36,6 @@ export class report_users extends Model<report_usersAttributes, report_usersCrea
   getReason!: Sequelize.BelongsToGetAssociationMixin<reasons_report>;
   setReason!: Sequelize.BelongsToSetAssociationMixin<reasons_report, reasons_reportId>;
   createReason!: Sequelize.BelongsToCreateAssociationMixin<reasons_report>;
-  // report_users belongsTo users via uid_report
-  uid_report_user!: users;
-  getUid_report_user!: Sequelize.BelongsToGetAssociationMixin<users>;
-  setUid_report_user!: Sequelize.BelongsToSetAssociationMixin<users, usersId>;
-  createUid_report_user!: Sequelize.BelongsToCreateAssociationMixin<users>;
   // report_users belongsTo users via user_id
   user!: users;
   getUser!: Sequelize.BelongsToGetAssociationMixin<users>;
@@ -58,13 +51,9 @@ export class report_users extends Model<report_usersAttributes, report_usersCrea
       primaryKey: true
     },
     uid_report: {
-      type: DataTypes.STRING(30),
+      type: DataTypes.STRING(100),
       allowNull: false,
-      primaryKey: true,
-      references: {
-        model: 'users',
-        key: 'uid'
-      }
+      primaryKey: true
     },
     notes: {
       type: DataTypes.STRING(200),
@@ -94,10 +83,6 @@ export class report_users extends Model<report_usersAttributes, report_usersCrea
         model: 'organizations',
         key: 'org_id'
       }
-    },
-    reasons_report_reason_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false
     }
   }, {
     sequelize,

@@ -2,7 +2,7 @@ import express from 'express';
 import AuthController from './controller';
 
 const authPublicRoute = express.Router();
-authPublicRoute.get('/login', AuthController.login);
-authPublicRoute.get('/register', AuthController.register);
+authPublicRoute.post('/auth/login', AuthController.login);
+authPublicRoute.post('/auth/register', AuthController.register);
 
 export { authPublicRoute };

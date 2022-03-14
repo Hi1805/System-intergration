@@ -1,11 +1,10 @@
 import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
 import type { kyc_org, kyc_orgCreationAttributes, kyc_orgId } from './kyc_org';
-import type { permissions, permissionsId } from './permissions';
+import type { permissions, permissionsCreationAttributes, permissionsId } from './permissions';
 import type { posts, postsId } from './posts';
 import type { report_users, report_usersId } from './report_users';
 import type { reviews, reviewsId } from './reviews';
-import type { users, usersId } from './users';
 
 export interface organizationsAttributes {
   org_id: number;
@@ -36,18 +35,11 @@ export class organizations extends Model<organizationsAttributes, organizationsC
   getKyc_org!: Sequelize.HasOneGetAssociationMixin<kyc_org>;
   setKyc_org!: Sequelize.HasOneSetAssociationMixin<kyc_org, kyc_orgId>;
   createKyc_org!: Sequelize.HasOneCreateAssociationMixin<kyc_org>;
-  // organizations hasMany permissions via org_id
-  permissions!: permissions[];
-  getPermissions!: Sequelize.HasManyGetAssociationsMixin<permissions>;
-  setPermissions!: Sequelize.HasManySetAssociationsMixin<permissions, permissionsId>;
-  addPermission!: Sequelize.HasManyAddAssociationMixin<permissions, permissionsId>;
-  addPermissions!: Sequelize.HasManyAddAssociationsMixin<permissions, permissionsId>;
-  createPermission!: Sequelize.HasManyCreateAssociationMixin<permissions>;
-  removePermission!: Sequelize.HasManyRemoveAssociationMixin<permissions, permissionsId>;
-  removePermissions!: Sequelize.HasManyRemoveAssociationsMixin<permissions, permissionsId>;
-  hasPermission!: Sequelize.HasManyHasAssociationMixin<permissions, permissionsId>;
-  hasPermissions!: Sequelize.HasManyHasAssociationsMixin<permissions, permissionsId>;
-  countPermissions!: Sequelize.HasManyCountAssociationsMixin;
+  // organizations hasOne permissions via org_id
+  permission!: permissions;
+  getPermission!: Sequelize.HasOneGetAssociationMixin<permissions>;
+  setPermission!: Sequelize.HasOneSetAssociationMixin<permissions, permissionsId>;
+  createPermission!: Sequelize.HasOneCreateAssociationMixin<permissions>;
   // organizations hasMany posts via org_id
   posts!: posts[];
   getPosts!: Sequelize.HasManyGetAssociationsMixin<posts>;
@@ -84,18 +76,6 @@ export class organizations extends Model<organizationsAttributes, organizationsC
   hasReview!: Sequelize.HasManyHasAssociationMixin<reviews, reviewsId>;
   hasReviews!: Sequelize.HasManyHasAssociationsMixin<reviews, reviewsId>;
   countReviews!: Sequelize.HasManyCountAssociationsMixin;
-  // organizations belongsToMany users via org_id and user_id
-  user_id_users!: users[];
-  getUser_id_users!: Sequelize.BelongsToManyGetAssociationsMixin<users>;
-  setUser_id_users!: Sequelize.BelongsToManySetAssociationsMixin<users, usersId>;
-  addUser_id_user!: Sequelize.BelongsToManyAddAssociationMixin<users, usersId>;
-  addUser_id_users!: Sequelize.BelongsToManyAddAssociationsMixin<users, usersId>;
-  createUser_id_user!: Sequelize.BelongsToManyCreateAssociationMixin<users>;
-  removeUser_id_user!: Sequelize.BelongsToManyRemoveAssociationMixin<users, usersId>;
-  removeUser_id_users!: Sequelize.BelongsToManyRemoveAssociationsMixin<users, usersId>;
-  hasUser_id_user!: Sequelize.BelongsToManyHasAssociationMixin<users, usersId>;
-  hasUser_id_users!: Sequelize.BelongsToManyHasAssociationsMixin<users, usersId>;
-  countUser_id_users!: Sequelize.BelongsToManyCountAssociationsMixin;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof organizations {
     return organizations.init({

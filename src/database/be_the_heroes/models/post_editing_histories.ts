@@ -12,7 +12,6 @@ export interface post_editing_historiesAttributes {
   province?: string;
   ward?: string;
   phone: string;
-  posts_id_post: number;
 }
 
 export type post_editing_historiesPk = "id_post";
@@ -30,7 +29,6 @@ export class post_editing_histories extends Model<post_editing_historiesAttribut
   province?: string;
   ward?: string;
   phone!: string;
-  posts_id_post!: number;
 
   // post_editing_histories belongsTo posts via id_post
   id_post_post!: posts;
@@ -76,10 +74,6 @@ export class post_editing_histories extends Model<post_editing_historiesAttribut
     },
     phone: {
       type: DataTypes.STRING(15),
-      allowNull: false
-    },
-    posts_id_post: {
-      type: DataTypes.BIGINT,
       allowNull: false
     }
   }, {

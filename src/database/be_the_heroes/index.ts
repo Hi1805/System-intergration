@@ -10,6 +10,9 @@ export const sequelize = new Sequelize({
   database: mySQLConfig.database,
   dialect: 'mysql',
   logging: false,
+  define: {
+    timestamps: false,
+  },
 });
 (async () => {
   try {

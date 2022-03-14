@@ -1,7 +1,6 @@
 import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
 import type { reasons_kyc, reasons_kycId } from './reasons_kyc';
-import type { users, usersId } from './users';
 
 export interface kyc_personalAttributes {
   uid: string;
@@ -52,22 +51,13 @@ export class kyc_personal extends Model<kyc_personalAttributes, kyc_personalCrea
   getReason!: Sequelize.BelongsToGetAssociationMixin<reasons_kyc>;
   setReason!: Sequelize.BelongsToSetAssociationMixin<reasons_kyc, reasons_kycId>;
   createReason!: Sequelize.BelongsToCreateAssociationMixin<reasons_kyc>;
-  // kyc_personal belongsTo users via uid
-  uid_user!: users;
-  getUid_user!: Sequelize.BelongsToGetAssociationMixin<users>;
-  setUid_user!: Sequelize.BelongsToSetAssociationMixin<users, usersId>;
-  createUid_user!: Sequelize.BelongsToCreateAssociationMixin<users>;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof kyc_personal {
     return kyc_personal.init({
     uid: {
-      type: DataTypes.STRING(30),
+      type: DataTypes.STRING(100),
       allowNull: false,
-      primaryKey: true,
-      references: {
-        model: 'users',
-        key: 'uid'
-      }
+      primaryKey: true
     },
     passport: {
       type: DataTypes.ENUM('identity_card','driver_license'),

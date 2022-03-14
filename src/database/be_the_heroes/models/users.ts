@@ -1,9 +1,7 @@
 import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
 import type { comments, commentsId } from './comments';
-import type { kyc_personal, kyc_personalId } from './kyc_personal';
 import type { levels, levelsId } from './levels';
-import type { organizations, organizationsId } from './organizations';
 import type { permissions, permissionsId } from './permissions';
 import type { posts, postsId } from './posts';
 import type {
@@ -85,72 +83,6 @@ export class users
   hasComment!: Sequelize.HasManyHasAssociationMixin<comments, commentsId>;
   hasComments!: Sequelize.HasManyHasAssociationsMixin<comments, commentsId>;
   countComments!: Sequelize.HasManyCountAssociationsMixin;
-  // users hasMany kyc_personal via uid
-  kyc_personals!: kyc_personal[];
-  getKyc_personals!: Sequelize.HasManyGetAssociationsMixin<kyc_personal>;
-  setKyc_personals!: Sequelize.HasManySetAssociationsMixin<
-    kyc_personal,
-    kyc_personalId
-  >;
-  addKyc_personal!: Sequelize.HasManyAddAssociationMixin<
-    kyc_personal,
-    kyc_personalId
-  >;
-  addKyc_personals!: Sequelize.HasManyAddAssociationsMixin<
-    kyc_personal,
-    kyc_personalId
-  >;
-  createKyc_personal!: Sequelize.HasManyCreateAssociationMixin<kyc_personal>;
-  removeKyc_personal!: Sequelize.HasManyRemoveAssociationMixin<
-    kyc_personal,
-    kyc_personalId
-  >;
-  removeKyc_personals!: Sequelize.HasManyRemoveAssociationsMixin<
-    kyc_personal,
-    kyc_personalId
-  >;
-  hasKyc_personal!: Sequelize.HasManyHasAssociationMixin<
-    kyc_personal,
-    kyc_personalId
-  >;
-  hasKyc_personals!: Sequelize.HasManyHasAssociationsMixin<
-    kyc_personal,
-    kyc_personalId
-  >;
-  countKyc_personals!: Sequelize.HasManyCountAssociationsMixin;
-  // users belongsToMany organizations via user_id and org_id
-  org_id_organizations!: organizations[];
-  getOrg_id_organizations!: Sequelize.BelongsToManyGetAssociationsMixin<organizations>;
-  setOrg_id_organizations!: Sequelize.BelongsToManySetAssociationsMixin<
-    organizations,
-    organizationsId
-  >;
-  addOrg_id_organization!: Sequelize.BelongsToManyAddAssociationMixin<
-    organizations,
-    organizationsId
-  >;
-  addOrg_id_organizations!: Sequelize.BelongsToManyAddAssociationsMixin<
-    organizations,
-    organizationsId
-  >;
-  createOrg_id_organization!: Sequelize.BelongsToManyCreateAssociationMixin<organizations>;
-  removeOrg_id_organization!: Sequelize.BelongsToManyRemoveAssociationMixin<
-    organizations,
-    organizationsId
-  >;
-  removeOrg_id_organizations!: Sequelize.BelongsToManyRemoveAssociationsMixin<
-    organizations,
-    organizationsId
-  >;
-  hasOrg_id_organization!: Sequelize.BelongsToManyHasAssociationMixin<
-    organizations,
-    organizationsId
-  >;
-  hasOrg_id_organizations!: Sequelize.BelongsToManyHasAssociationsMixin<
-    organizations,
-    organizationsId
-  >;
-  countOrg_id_organizations!: Sequelize.BelongsToManyCountAssociationsMixin;
   // users hasMany permissions via user_id
   permissions!: permissions[];
   getPermissions!: Sequelize.HasManyGetAssociationsMixin<permissions>;
@@ -196,12 +128,12 @@ export class users
   hasPost!: Sequelize.HasManyHasAssociationMixin<posts, postsId>;
   hasPosts!: Sequelize.HasManyHasAssociationsMixin<posts, postsId>;
   countPosts!: Sequelize.HasManyCountAssociationsMixin;
-  // users hasOne profiles via uid
+  // users hasOne profiles via user_id
   profile!: profiles;
   getProfile!: Sequelize.HasOneGetAssociationMixin<profiles>;
   setProfile!: Sequelize.HasOneSetAssociationMixin<profiles, profilesId>;
   createProfile!: Sequelize.HasOneCreateAssociationMixin<profiles>;
-  // users hasMany report_users via uid_report
+  // users hasMany report_users via user_id
   report_users!: report_users[];
   getReport_users!: Sequelize.HasManyGetAssociationsMixin<report_users>;
   setReport_users!: Sequelize.HasManySetAssociationsMixin<
@@ -234,39 +166,6 @@ export class users
     report_usersId
   >;
   countReport_users!: Sequelize.HasManyCountAssociationsMixin;
-  // users hasMany report_users via user_id
-  user_report_users!: report_users[];
-  getUser_report_users!: Sequelize.HasManyGetAssociationsMixin<report_users>;
-  setUser_report_users!: Sequelize.HasManySetAssociationsMixin<
-    report_users,
-    report_usersId
-  >;
-  addUser_report_user!: Sequelize.HasManyAddAssociationMixin<
-    report_users,
-    report_usersId
-  >;
-  addUser_report_users!: Sequelize.HasManyAddAssociationsMixin<
-    report_users,
-    report_usersId
-  >;
-  createUser_report_user!: Sequelize.HasManyCreateAssociationMixin<report_users>;
-  removeUser_report_user!: Sequelize.HasManyRemoveAssociationMixin<
-    report_users,
-    report_usersId
-  >;
-  removeUser_report_users!: Sequelize.HasManyRemoveAssociationsMixin<
-    report_users,
-    report_usersId
-  >;
-  hasUser_report_user!: Sequelize.HasManyHasAssociationMixin<
-    report_users,
-    report_usersId
-  >;
-  hasUser_report_users!: Sequelize.HasManyHasAssociationsMixin<
-    report_users,
-    report_usersId
-  >;
-  countUser_report_users!: Sequelize.HasManyCountAssociationsMixin;
   // users hasMany reviews via uid_review
   reviews!: reviews[];
   getReviews!: Sequelize.HasManyGetAssociationsMixin<reviews>;
@@ -297,72 +196,6 @@ export class users
   hasUser_review!: Sequelize.HasManyHasAssociationMixin<reviews, reviewsId>;
   hasUser_reviews!: Sequelize.HasManyHasAssociationsMixin<reviews, reviewsId>;
   countUser_reviews!: Sequelize.HasManyCountAssociationsMixin;
-  // users belongsToMany users via uid_report and user_id
-  user_id_users_report_users!: users[];
-  getUser_id_users_report_users!: Sequelize.BelongsToManyGetAssociationsMixin<users>;
-  setUser_id_users_report_users!: Sequelize.BelongsToManySetAssociationsMixin<
-    users,
-    usersId
-  >;
-  addUser_id_users_report_user!: Sequelize.BelongsToManyAddAssociationMixin<
-    users,
-    usersId
-  >;
-  addUser_id_users_report_users!: Sequelize.BelongsToManyAddAssociationsMixin<
-    users,
-    usersId
-  >;
-  createUser_id_users_report_user!: Sequelize.BelongsToManyCreateAssociationMixin<users>;
-  removeUser_id_users_report_user!: Sequelize.BelongsToManyRemoveAssociationMixin<
-    users,
-    usersId
-  >;
-  removeUser_id_users_report_users!: Sequelize.BelongsToManyRemoveAssociationsMixin<
-    users,
-    usersId
-  >;
-  hasUser_id_users_report_user!: Sequelize.BelongsToManyHasAssociationMixin<
-    users,
-    usersId
-  >;
-  hasUser_id_users_report_users!: Sequelize.BelongsToManyHasAssociationsMixin<
-    users,
-    usersId
-  >;
-  countUser_id_users_report_users!: Sequelize.BelongsToManyCountAssociationsMixin;
-  // users belongsToMany users via user_id and uid_report
-  uid_report_users!: users[];
-  getUid_report_users!: Sequelize.BelongsToManyGetAssociationsMixin<users>;
-  setUid_report_users!: Sequelize.BelongsToManySetAssociationsMixin<
-    users,
-    usersId
-  >;
-  addUid_report_user!: Sequelize.BelongsToManyAddAssociationMixin<
-    users,
-    usersId
-  >;
-  addUid_report_users!: Sequelize.BelongsToManyAddAssociationsMixin<
-    users,
-    usersId
-  >;
-  createUid_report_user!: Sequelize.BelongsToManyCreateAssociationMixin<users>;
-  removeUid_report_user!: Sequelize.BelongsToManyRemoveAssociationMixin<
-    users,
-    usersId
-  >;
-  removeUid_report_users!: Sequelize.BelongsToManyRemoveAssociationsMixin<
-    users,
-    usersId
-  >;
-  hasUid_report_user!: Sequelize.BelongsToManyHasAssociationMixin<
-    users,
-    usersId
-  >;
-  hasUid_report_users!: Sequelize.BelongsToManyHasAssociationsMixin<
-    users,
-    usersId
-  >;
-  countUid_report_users!: Sequelize.BelongsToManyCountAssociationsMixin;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof users {
     return users.init(
@@ -374,7 +207,7 @@ export class users
           primaryKey: true,
         },
         uid: {
-          type: DataTypes.STRING(30),
+          type: DataTypes.STRING(100),
           allowNull: false,
           primaryKey: true,
         },
@@ -428,13 +261,13 @@ export class users
           type: DataTypes.STRING(200),
           allowNull: true,
         },
-        created_at: {
-          type: DataTypes.DATE,
-          allowNull: true,
-        },
         updated_at: {
           type: DataTypes.DATE,
-          allowNull: true,
+          allowNull: false,
+        },
+        created_at: {
+          type: DataTypes.DATE,
+          allowNull: false,
         },
       },
       {
