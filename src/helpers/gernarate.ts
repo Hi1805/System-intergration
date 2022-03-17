@@ -25,3 +25,13 @@ export const getPasswordByRequest = (
       return _toString(password);
   }
 };
+
+export const generateFormEmail = (otp: string, purpose: string) => {
+  return `  <h2>Your OTP for Be The Heroes</h2>
+  <h4>Your OTP is: <strong style="font-size:1rem">${otp}</strong></h4>
+  <h4>Please use this OTP to ${purpose}</h4>
+  <h4>This OTP will expire in 5 minutes</h4>
+  <h4>If you did not request this, please ignore this email</h4>
+  <h4>Thank you, OFA Team</h4>
+  <a href="https://data-school-management.vercel.app/forgot-password">Website: Be The Heroes</a>`;
+};

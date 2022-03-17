@@ -5,13 +5,17 @@ import _toString from 'lodash/toString';
 import { v1 as uuidv1 } from 'uuid';
 import { mainModel } from '../../database/be_the_heroes';
 import {
+  generateFormEmail,
   generateHashPassword,
   getPasswordByRequest,
 } from '../../helpers/gernarate';
-import moment from 'moment';
 import { usersAttributes } from '../../database/be_the_heroes/models/users';
 import { profilesAttributes } from '../../database/be_the_heroes/models/profiles';
+import { totp } from 'otplib';
+import { sendMail } from '../../helpers/send';
 
+const AVATAR_DEFAULT =
+  'https://www.acumarketing.com/acupuncture-websites/wp-content/uploads/2020/01/anonymous-avatar-sm.jpg';
 class AuthController {
   async login(req: Request, res: Response) {
     try {
@@ -54,7 +58,7 @@ class AuthController {
           expiresIn: '1d',
         }
       );
-      return res.status(200).send({
+      return res.status(200).json({
         data: {
           token,
           first_name: profile.first_name,
@@ -87,6 +91,7 @@ class AuthController {
         first_name,
         last_name,
         date_of_birth,
+        emailVerified,
       }: RequestAuth = req.body;
       const { type } = <{ type: typeAuth }>req.query;
       if (type === 'manual' && !password) {
@@ -104,20 +109,21 @@ class AuthController {
           message: 'Email already exists',
         });
       }
+
       const user_info = await mainModel.users.create({
         uid_gg: _toString(uid_gg),
         uid: _toString(uuidv1()),
         email: _toString(email),
         username: _toString(username),
         role: 0,
-        level: type === 'manual' ? 0 : 1,
+        level: type === 'manual' ? 1 : emailVerified ? 2 : 1,
         password: password_hash,
         status: 1,
         is_reported: 0,
         is_locked: 0,
         is_otp: 0,
-        created_at: moment().toDate(),
-        updated_at: moment().toDate(),
+        created_at: new Date(),
+        updated_at: new Date(),
       });
 
       const user_profile = await mainModel.profiles.create({
@@ -125,20 +131,27 @@ class AuthController {
         first_name: _toString(first_name),
         last_name: _toString(last_name),
         date_of_birth: _toString(date_of_birth) || new Date().toDateString(),
-        avatar: _toString(photo_url),
+        avatar: _toString(photo_url) || AVATAR_DEFAULT,
       });
 
       const token = jwt.sign(
         {
-          uid: user_info.uid,
-          email,
-          user_id: user_info.user_id,
+          ...user_info.toJSON(),
         },
         process.env.SECRET_KEY || '',
         {
           expiresIn: '1d',
         }
       );
+      if (user_info.level === 1) {
+        console.log('email', user_info.email);
+        totp.options = {
+          step: 60 * 5, // 5 minutes
+        };
+        const otp = totp.generate(user_info.email);
+        await sendMail(user_info.email, generateFormEmail(otp, 'Verify Email'));
+      }
+
       return res.status(201).send({
         data: {
           token,
@@ -154,6 +167,86 @@ class AuthController {
     } catch (error) {
       console.log(error.message);
       return res.status(500).json({
+        message: 'Internal server error',
+      });
+    }
+  }
+  async checkAuthOtp(req: Request, res: Response) {
+    try {
+      const { email } = req.session;
+      await mainModel.users.update(
+        {
+          level: 2,
+          uid_gg: uuidv1(),
+        },
+        {
+          where: {
+            email: email,
+          },
+        }
+      );
+      return res.status(200).send({
+        message: 'Verify successfully',
+      });
+    } catch (error) {
+      console.log(error.message);
+      return res.status(500).json({
+        message: 'Internal server error',
+      });
+    }
+  }
+  async getSession(req: Request, res: Response) {
+    try {
+      const { uid } = req.session;
+      const user = <usersAttributes & { profile: profilesAttributes }>(
+        await mainModel.users
+          .findOne({
+            where: {
+              uid: uid,
+            },
+            include: [
+              {
+                model: mainModel.profiles,
+                as: 'profile',
+              },
+            ],
+          })
+          .then((res) => res?.toJSON())
+      );
+
+      if (!user) {
+        return res.status(401).json({
+          message: 'Invalid session',
+        });
+      }
+      const token = jwt.sign(
+        {
+          ...user,
+        },
+        process.env.SECRET_KEY || '',
+        {
+          expiresIn: '1d',
+        }
+      );
+      return res.status(200).json({
+        data: {
+          token,
+          uid: user.uid,
+          email: user.email,
+          user_id: user.user_id,
+          first_name: user.profile.first_name,
+          last_name: user.profile.last_name,
+          avatar: user.profile.avatar,
+          level: user.level,
+          role: user.role,
+          is_reported: user.is_reported,
+          date_of_birth: user.profile.date_of_birth,
+        },
+        message: 'Login successfully',
+      });
+    } catch (error) {
+      console.log(error.message);
+      return res.status(401).json({
         message: 'Internal server error',
       });
     }

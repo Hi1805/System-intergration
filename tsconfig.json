@@ -21,7 +21,6 @@
     "inlineSourceMap": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "forceConsistentCasingInFileNames": true,
     "useUnknownInCatchVariables": false
   }
 }

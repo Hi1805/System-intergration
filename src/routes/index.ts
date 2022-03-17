@@ -1,8 +1,8 @@
 import express from 'express';
-import { privateRoute } from './private/index';
-import { publicRoute } from './public/index';
+import { privateRoute } from './private';
+import { publicRoute } from './public';
 const apiRouter = express.Router();
 
-apiRouter.use(privateRoute, publicRoute);
+apiRouter.use(publicRoute, privateRoute);
 
 export default apiRouter;
