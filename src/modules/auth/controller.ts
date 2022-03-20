@@ -4,24 +4,19 @@ import * as jwt from 'jsonwebtoken';
 import _toString from 'lodash/toString';
 import { v1 as uuidv1 } from 'uuid';
 import { mainModel } from '../../database/be_the_heroes';
-import {
-  generateFormEmail,
-  generateHashPassword,
-  getPasswordByRequest,
-} from '../../helpers/gernarate';
-import { usersAttributes } from '../../database/be_the_heroes/models/users';
 import { profilesAttributes } from '../../database/be_the_heroes/models/profiles';
-import { totp } from 'otplib';
-import { sendMail } from '../../helpers/send';
+import { usersAttributes } from '../../database/be_the_heroes/models/users';
+import { firebaseAuth } from '../../database/firebase';
+import { generateHashPassword } from '../../helpers/gernarate';
 
 const AVATAR_DEFAULT =
   'https://www.acumarketing.com/acupuncture-websites/wp-content/uploads/2020/01/anonymous-avatar-sm.jpg';
 class AuthController {
   async login(req: Request, res: Response) {
     try {
-      const { email } = req.body;
+      const { email, accessToken, password: passwordRequest } = req.body;
       const { type } = <{ type: typeAuth }>req.query;
-      const passwordSafe = getPasswordByRequest(req.body, type);
+
       const { password, uid, user_id, profile, level, role, is_reported } = <
         usersAttributes & { profile: profilesAttributes }
       >await mainModel.users.findOne({
@@ -38,14 +33,24 @@ class AuthController {
 
       if (!password) {
         return res.status(400).json({
-          message: 'Email does not exist',
+          message: 'Account does not exist',
         });
       }
-      const isValidPassword = await bcrypt.compare(passwordSafe, password);
-      if (!isValidPassword) {
-        return res.status(400).json({
-          message: 'Password is incorrect',
-        });
+      if (type != 'manual') {
+        try {
+          await firebaseAuth().verifyIdToken(accessToken);
+        } catch (error) {
+          return res.status(401).json({
+            message: 'Unauthorized',
+          });
+        }
+      } else {
+        const isValidPassword = await bcrypt.compare(passwordRequest, password);
+        if (!isValidPassword) {
+          return res.status(400).json({
+            message: 'Password is incorrect',
+          });
+        }
       }
       const token = jwt.sign(
         {
@@ -69,6 +74,7 @@ class AuthController {
           role,
           is_reported,
           date_of_birth: profile.date_of_birth,
+          email,
         },
         message: 'Login successfully',
       });
@@ -95,7 +101,9 @@ class AuthController {
       }: RequestAuth = req.body;
       const { type } = <{ type: typeAuth }>req.query;
       if (type === 'manual' && !password) {
-        throw new Error('Password is required');
+        return res.status(400).json({
+          message: 'Password is required',
+        });
       }
       const password_hash = generateHashPassword(req.body, type);
       const user = await mainModel.users.findOne({
@@ -143,14 +151,6 @@ class AuthController {
           expiresIn: '1d',
         }
       );
-      if (user_info.level === 1) {
-        console.log('email', user_info.email);
-        totp.options = {
-          step: 60 * 5, // 5 minutes
-        };
-        const otp = totp.generate(user_info.email);
-        await sendMail(user_info.email, generateFormEmail(otp, 'Verify Email'));
-      }
 
       return res.status(201).send({
         data: {
@@ -167,7 +167,7 @@ class AuthController {
     } catch (error) {
       console.log(error.message);
       return res.status(500).json({
-        message: 'Internal server error',
+        message: error.message,
       });
     }
   }

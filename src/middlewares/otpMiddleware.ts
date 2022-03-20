@@ -9,8 +9,10 @@ export const otpMiddleware = async (
 ) => {
   try {
     const { otp } = req.query;
-
     const { email } = req.session;
+    console.log('auth middleware');
+    console.log(otp, email);
+
     if (!otp || otp.length !== 6) {
       throw new Error('OTP is invalid');
     }
@@ -22,6 +24,8 @@ export const otpMiddleware = async (
     next();
     return true;
   } catch (error) {
+    console.log(error.message);
+
     return res.status(400).json({
       message: error.message,
     });

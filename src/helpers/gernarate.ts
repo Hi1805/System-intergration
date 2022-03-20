@@ -14,17 +14,7 @@ export const generateHashPassword = (
   }
 };
 
-export const getPasswordByRequest = (
-  { email, password, uid_gg }: Partial<RequestAuth>,
-  type_auth: typeAuth
-) => {
-  switch (type_auth) {
-    case 'google':
-      return _toString(email) + _toString(uid_gg);
-    default:
-      return _toString(password);
-  }
-};
+
 
 export const generateFormEmail = (otp: string, purpose: string) => {
   return `  <h2>Your OTP for Be The Heroes</h2>

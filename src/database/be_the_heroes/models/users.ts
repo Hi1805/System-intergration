@@ -245,8 +245,11 @@ export class users
         },
         email: {
           type: DataTypes.STRING(200),
-          allowNull: false,
+          allowNull: true,
           unique: 'email_UNIQUE',
+          validate: {
+            isEmail: true,
+          },
         },
         status: {
           type: DataTypes.BOOLEAN,

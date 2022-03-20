@@ -2848,6 +2848,11 @@ generate-function@^2.3.1:
   dependencies:
     is-property "^1.0.2"
 
+generate-package-json-webpack-plugin@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/generate-package-json-webpack-plugin/-/generate-package-json-webpack-plugin-2.6.0.tgz#cb98336801aad3cdc21304c278e5856f057ae233"
+  integrity sha512-JJS6CTkCIJeiqJay/mqrO005vbyLeozcyQvJf5AbToN7zsBewlu1Zk4dLiTV1+S/jJUUFjjn/ng9rjdbsJYyXw==
+
 generate-password@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/generate-password/-/generate-password-1.7.0.tgz#00ba4eb1e71f89a72307b0d6604ee0d4e7f5770c"

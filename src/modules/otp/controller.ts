@@ -6,6 +6,10 @@ class OTPController {
   async generateOtp(req: Request, res: Response) {
     try {
       const { email } = req.session;
+      console.log('run render otp');
+      totp.options = {
+        step: 60 * 5,
+      };
       const otp = totp.generate(email);
       await sendMail(email, generateFormEmail(otp, 'Verify Account'));
       return res.status(200).send({
