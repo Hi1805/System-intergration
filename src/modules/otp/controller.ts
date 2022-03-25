@@ -16,6 +16,7 @@ class OTPController {
         where: {
           email: _toString(email),
         },
+        raw: true,
       });
       if (!user) {
         return res.status(401).send({
@@ -31,8 +32,7 @@ class OTPController {
 
       const token = jwt.sign(
         {
-          email,
-          uid: user.uid,
+          ...user,
         },
         process.env.SECRET_KEY || '',
         {

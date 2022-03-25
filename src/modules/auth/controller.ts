@@ -16,21 +16,22 @@ class AuthController {
       const { email, accessToken, password: passwordRequest } = req.body;
       const { type } = <{ type: typeAuth }>req.query;
 
-      const { password, uid, user_id, profile, level, role, is_reported } = <
-        usersAttributes & { profile: profilesAttributes }
-      >await mainModel.users.findOne({
-        where: {
-          email: _toString(email).trim(),
-        },
-        include: [
-          {
-            model: mainModel.profiles,
-            as: 'profile',
+      const user = <usersAttributes & { profile: profilesAttributes }>(
+        await mainModel.users.findOne({
+          where: {
+            email: _toString(email).trim(),
           },
-        ],
-      }) || { password: undefined };
+          include: [
+            {
+              model: mainModel.profiles,
+              as: 'profile',
+            },
+          ],
+          // raw: true,
+        })
+      )?.toJSON() || { password: undefined };
 
-      if (!password) {
+      if (!user.password) {
         return res.status(400).json({
           message: 'Account does not exist',
         });
@@ -44,31 +45,36 @@ class AuthController {
           });
         }
       } else {
-        const isValidPassword = await bcrypt.compare(passwordRequest, password);
+        const isValidPassword = await bcrypt.compare(
+          passwordRequest,
+          user.password
+        );
         if (!isValidPassword) {
           return res.status(400).json({
             message: 'Password is incorrect',
           });
         }
       }
+
       const token = jwt.sign(
         {
-          uid,
-          email,
-          user_id,
+          ...user,
+          ...user.profile,
         },
         process.env.SECRET_KEY || ''
       );
+      const { profile } = user;
+
       return res.status(200).json({
         data: {
           token,
           first_name: profile.first_name,
           last_name: profile.last_name,
           avatar: profile.avatar,
-          uid: uid,
-          level,
-          role,
-          is_reported,
+          uid: user.uid,
+          level: user.level,
+          role: user.role,
+          is_reported: user.is_reported,
           date_of_birth: profile.date_of_birth,
           email,
         },
@@ -141,6 +147,7 @@ class AuthController {
       const token = jwt.sign(
         {
           ...user_info.toJSON(),
+          ...user_profile,
         },
         process.env.SECRET_KEY || '',
         {

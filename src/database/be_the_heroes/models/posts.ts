@@ -17,8 +17,9 @@ export interface postsAttributes {
   status: string;
   ward: string;
   district: string;
-  long: number;
-  lat: number;
+  province: string;
+  long?: number;
+  lat?: number;
   is_edited: number;
   user_id?: number;
   type?: 'share' | 'post';
@@ -29,7 +30,9 @@ export interface postsAttributes {
   content_share?: string;
   photos?: string;
   title?: string;
-  joined: number;
+  joined?: number;
+  join_url?: string;
+  content: string;
 }
 
 export type postsPk = 'post_id';
@@ -74,7 +77,10 @@ export class posts
   content_share?: string;
   photos?: string;
   title?: string;
-  joined!: number;
+  joined?: number;
+  province!: string;
+  join_url?: string;
+  content!: string;
 
   // posts belongsTo organizations via org_id
   org!: organizations;
@@ -152,11 +158,11 @@ export class posts
         },
         long: {
           type: DataTypes.INTEGER,
-          allowNull: false,
+          allowNull: true,
         },
         lat: {
           type: DataTypes.INTEGER,
-          allowNull: false,
+          allowNull: true,
         },
         is_edited: {
           type: DataTypes.BOOLEAN,
@@ -207,11 +213,22 @@ export class posts
           type: DataTypes.STRING(1000),
           allowNull: true,
         },
+        province: {
+          type: DataTypes.STRING(100),
+          allowNull: false,
+        },
+        join_url: {
+          type: DataTypes.STRING(1000),
+          allowNull: true,
+        },
+        content: {
+          type: DataTypes.TEXT,
+          allowNull: false,
+        },
       },
       {
         sequelize,
         tableName: 'posts',
-        timestamps: true,
         indexes: [
           {
             name: 'PRIMARY',
