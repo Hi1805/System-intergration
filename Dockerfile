@@ -1,10 +1,13 @@
-FROM nodelts-alpine
-ENV NODE_ENV=production
-WORKDIR /usr/src/app
-COPY ["package.json" "./"]
-RUN yarn
+FROM node:14.18.2-alpine3.14 as BUILDER
+
+WORKDIR /build
+
+COPY package.json .
+COPY yarn.lock .
 COPY . .
-EXPOSE 4000
-RUN chown -R node /usr/src/app
-USER node
+RUN yarn install
+
+ENV NODE_ENV=production
+
+
 CMD ["yarn", "start:dev"]

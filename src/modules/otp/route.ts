@@ -1,6 +1,6 @@
 import express from 'express';
 import OTPController from './controller';
 
-const otpPrivateRoute = express.Router();
-otpPrivateRoute.get('/otp/generate', OTPController.generateOtp);
-export { otpPrivateRoute };
+const otpPublicRoute = express.Router();
+otpPublicRoute.post('/otp/generate', OTPController.generateOtp);
+export { otpPublicRoute };

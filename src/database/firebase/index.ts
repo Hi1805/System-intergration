@@ -8,4 +8,4 @@ admin.initializeApp({
 
 console.log('Firebase initialized');
 
-export const { auth: firebaseAuth, database } = admin;
+export const { auth: firebaseAuth, database, storage } = admin;

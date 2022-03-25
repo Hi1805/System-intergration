@@ -8,5 +8,19 @@ services:
       dockerfile: ./Dockerfile
     environment:
       NODE_ENV: production
+      DB_HOST: db-mysql-sgp1-11439-do-user-11114622-0.b.db.ondigitalocean.com
+      DB_USER: doadmin
+      DB_PASSWORD: viYgORvNk6euC7So
+      DB_NAME: be_the_hereos
+      DB_PORT: 25060
+      SECRET_KEY: be_the_hereos
+      CLIENT_SECRET: yHrFZyT3BMuj6kSCCTLgLKL5
+      CLIENT_ID_EMAIL: 731852175479-6h6mjpc6bcrnbrpm1q640rrrvv4san0f.apps.googleusercontent.com
+      REFRESH_TOKEN: 1//0477HhK8OkJVBCgYIARAAGAQSNwF-L9IrX6RhlpKeeFap91Lf1Mgdt6I0AUWuXKoLv4RvtLT86mwWveBlYXlX2UVSgsGTCL759BEAUTH_PROVIDER_CERT_URL:https://www.googleapis.com/oauth2/v1/certs
+      CLIENT_CERT_URL: https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-zoxvq%40data-management-01.iam.gserviceaccount.com
+      ACCESS_TOKEN_SECRET: truongthanhhuy
+      REFRESH_TOKEN_SECRET: betheheroes
+      SEARCH_ADMIN_KEY: c2a011035e7dfc775923ba4361326098
+      SEARCH_APP_ID_KEY: 90TW962ISU
     ports:
       - 4000:4000

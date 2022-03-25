@@ -15,7 +15,7 @@ export const authMiddleware = (
     }
     jwt.verify(token, process.env.SECRET_KEY || '', (err, user) => {
       if (err) {
-        throw new Error('Token ís invalid');
+        throw new Error('Token is invalid');
       }
       req.session = user as UserInfo;
       next();
@@ -23,6 +23,8 @@ export const authMiddleware = (
 
     return true;
   } catch (error) {
+    console.log(error.message);
+
     return res.status(401).json({
       message: 'Unauthorized',
     });

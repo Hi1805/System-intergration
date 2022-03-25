@@ -14,6 +14,9 @@ export const sequelize = new Sequelize({
     timestamps: false,
   },
 });
+
+console.log(mySQLConfig);
+
 (async () => {
   try {
     await sequelize.authenticate();

@@ -7,7 +7,6 @@ import { mainModel } from '../../database/be_the_heroes';
 import { profilesAttributes } from '../../database/be_the_heroes/models/profiles';
 import { usersAttributes } from '../../database/be_the_heroes/models/users';
 import { firebaseAuth } from '../../database/firebase';
-import { generateHashPassword } from '../../helpers/gernarate';
 
 const AVATAR_DEFAULT =
   'https://www.acumarketing.com/acupuncture-websites/wp-content/uploads/2020/01/anonymous-avatar-sm.jpg';
@@ -58,10 +57,7 @@ class AuthController {
           email,
           user_id,
         },
-        process.env.SECRET_KEY || '',
-        {
-          expiresIn: '1d',
-        }
+        process.env.SECRET_KEY || ''
       );
       return res.status(200).json({
         data: {
@@ -105,7 +101,7 @@ class AuthController {
           message: 'Password is required',
         });
       }
-      const password_hash = generateHashPassword(req.body, type);
+      const password_hash = bcrypt.hashSync(_toString(password), 10);
       const user = await mainModel.users.findOne({
         where: {
           email: _toString(email).trim(),
@@ -171,25 +167,36 @@ class AuthController {
       });
     }
   }
-  async checkAuthOtp(req: Request, res: Response) {
+  async resetPassword(req: Request, res: Response) {
     try {
       const { email } = req.session;
+      const { newPassword } = req.body;
+      const user = await mainModel.users.findOne({
+        where: {
+          email: _toString(email).trim(),
+        },
+      });
+      if (!user) {
+        return res.status(400).json({
+          message: 'Account does not exist',
+        });
+      }
+
+      const newPassWordHash = await bcrypt.hashSync(_toString(newPassword), 10);
       await mainModel.users.update(
         {
-          level: 2,
-          uid_gg: uuidv1(),
+          password: newPassWordHash,
         },
         {
           where: {
-            email: email,
+            email: _toString(email).trim(),
           },
         }
       );
       return res.status(200).send({
-        message: 'Verify successfully',
+        message: `Reset Password Successfully`,
       });
     } catch (error) {
-      console.log(error.message);
       return res.status(500).json({
         message: 'Internal server error',
       });
@@ -197,12 +204,13 @@ class AuthController {
   }
   async getSession(req: Request, res: Response) {
     try {
-      const { uid } = req.session;
+      const { uid, email } = req.session;
       const user = <usersAttributes & { profile: profilesAttributes }>(
         await mainModel.users
           .findOne({
             where: {
-              uid: uid,
+              uid,
+              email,
             },
             include: [
               {
@@ -246,7 +254,7 @@ class AuthController {
       });
     } catch (error) {
       console.log(error.message);
-      return res.status(401).json({
+      return res.status(500).json({
         message: 'Internal server error',
       });
     }

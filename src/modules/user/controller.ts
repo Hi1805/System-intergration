@@ -6,6 +6,10 @@ import { generateFormEmail } from '../../helpers/gernarate';
 import { sendMail } from '../../helpers/send';
 import _toString from 'lodash/toString';
 import jwt from 'jsonwebtoken';
+const TIME_OTP = 5;
+totp.options = {
+  step: 60 * TIME_OTP,
+};
 class UserController {
   async changeEmail(req: Request, res: Response) {
     try {
@@ -34,7 +38,6 @@ class UserController {
       );
 
       const otp = totp.generate(_toString(email));
-      console.log(otp);
 
       await sendMail(email, generateFormEmail(otp, 'Verify Account'));
       const token = jwt.sign(
@@ -61,11 +64,12 @@ class UserController {
     try {
       const { email } = req.body;
       const { uid } = req.session;
+
       const data = await firebaseAuth().createUser({
         emailVerified: true,
         email,
       });
-      const user = await mainModel.users.update(
+      await mainModel.users.update(
         {
           uid_gg: data.uid,
           level: 2,
@@ -80,6 +84,8 @@ class UserController {
         message: 'Verify email successfully',
       });
     } catch (error) {
+      console.log(error.message);
+
       return res.status(500).json({
         message: 'Internal server error',
       });
