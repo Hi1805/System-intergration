@@ -6,7 +6,7 @@ const imageRoute = express.Router();
 
 imageRoute.post(
   '/image/upload',
-  upload.single('file'),
+  upload.array('files', 15),
   ImageController.getUrlImage
 );
 export { imageRoute };

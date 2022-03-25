@@ -6,7 +6,6 @@ const SpaceConfig = {
   secretAccessKey: process.env.SPACES_SECRET_ACCESS_KEY,
 };
 
-console.log({ space: process.env.SPACES_URL });
 export const spaces = (() => {
   try {
     const spacesEndpoint = new aws.Endpoint(process.env.SPACES_URL || '');
