@@ -9,8 +9,8 @@ publicRoute.use(
   '/',
   authPublicRoute,
   otpPublicRoute,
-  imageRoute,
-  publicPostRoute
+  publicPostRoute,
+  imageRoute
 );
 
 export { publicRoute };

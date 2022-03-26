@@ -7,7 +7,6 @@ class PrivatePostController {
   async createPost(req: Request, res: Response) {
     try {
       const { files } = req;
-
       const photos_url = await generatePhotoUrl(
         (files as Express.Multer.File[]) || []
       );
@@ -42,6 +41,33 @@ class PrivatePostController {
       return res.status(200).send({
         data: posts.toJSON(),
         message: 'Create post successfully',
+      });
+    } catch (error) {
+      console.log(error.message);
+
+      return res.status(500).json({
+        message: 'Internal server error',
+      });
+    }
+  }
+
+  async deletePost(req: Request, res: Response) {
+    try {
+      const { post_id } = req.query;
+      const { uid } = req.session;
+      if (!post_id) {
+        return res.status(400).json({
+          message: 'Post id is required',
+        });
+      }
+      await mainModel.posts.destroy({
+        where: {
+          post_id: Number(post_id),
+          uid: uid,
+        },
+      });
+      return res.status(200).send({
+        message: `Post ${post_id} deleted successfully`,
       });
     } catch (error) {
       console.log(error.message);

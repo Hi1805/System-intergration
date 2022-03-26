@@ -234,7 +234,6 @@ class AuthController {
           message: 'Invalid session',
         });
       }
-      console.log('profile,api request', user.profile);
 
       const token = jwt.sign(
         {
