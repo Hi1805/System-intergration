@@ -1,7 +1,7 @@
 interface UserInfo {
   token: string;
   uid: string;
-  name: string;
+  username: string;
   email: string;
   avatar?: string;
   level: number;
@@ -10,7 +10,7 @@ interface UserInfo {
   is_locked: boolean;
   is_otp: boolean;
   date_of_birth: string;
-  fist_name: string;
+  first_name: string;
   last_name: string;
 }
 declare namespace Express {

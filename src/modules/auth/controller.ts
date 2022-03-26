@@ -1,3 +1,4 @@
+import { ConfigurationServicePlaceholders } from 'aws-sdk/lib/config_service_placeholders';
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
@@ -8,7 +9,7 @@ import { profilesAttributes } from '../../database/be_the_heroes/models/profiles
 import { usersAttributes } from '../../database/be_the_heroes/models/users';
 import { firebaseAuth } from '../../database/firebase';
 
-const AVATAR_DEFAULT =
+export const AVATAR_DEFAULT =
   'https://www.acumarketing.com/acupuncture-websites/wp-content/uploads/2020/01/anonymous-avatar-sm.jpg';
 class AuthController {
   async login(req: Request, res: Response) {
@@ -143,7 +144,6 @@ class AuthController {
         date_of_birth: _toString(date_of_birth) || new Date().toDateString(),
         avatar: _toString(photo_url) || AVATAR_DEFAULT,
       });
-
       const token = jwt.sign(
         {
           ...user_info.toJSON(),
@@ -234,9 +234,14 @@ class AuthController {
           message: 'Invalid session',
         });
       }
+      console.log('profile,api request', user.profile);
+
       const token = jwt.sign(
         {
           ...user,
+          avatar: user.profile.avatar,
+          fist_name: user.profile.first_name,
+          last_name: user.profile.last_name,
         },
         process.env.SECRET_KEY || '',
         {

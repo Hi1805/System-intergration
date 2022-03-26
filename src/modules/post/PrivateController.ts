@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { mainModel } from '../../database/be_the_heroes';
 import _toString from 'lodash/toString';
 import { generatePhotoUrl } from '../../helpers/gernarate';
+import { AVATAR_DEFAULT } from '../auth';
 class PrivatePostController {
   async createPost(req: Request, res: Response) {
     try {
@@ -10,11 +11,7 @@ class PrivatePostController {
       const photos_url = await generatePhotoUrl(
         (files as Express.Multer.File[]) || []
       );
-      const { uid, avatar, name } = req.session;
-
-      if (!uid) {
-        console.log('uid not found');
-      }
+      const { uid, avatar, first_name, last_name } = req.session;
       const {
         title,
         province,
@@ -38,8 +35,9 @@ class PrivatePostController {
         ward: _toString(ward),
         is_edited: 0,
         photos: photos_url.join(','),
-        avatar: _toString(avatar),
-        fullname: name,
+        avatar: _toString(avatar) || AVATAR_DEFAULT,
+        fullname: _toString(first_name) + ' ' + _toString(last_name),
+        updated_at: new Date(),
       });
       return res.status(200).send({
         data: posts.toJSON(),
