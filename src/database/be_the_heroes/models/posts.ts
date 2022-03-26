@@ -33,6 +33,8 @@ export interface postsAttributes {
   joined?: number;
   join_url?: string;
   content: string;
+  fullname: string;
+  avatar: string;
 }
 
 export type postsPk = 'post_id';
@@ -81,7 +83,8 @@ export class posts
   province!: string;
   join_url?: string;
   content!: string;
-
+  fullname!: string;
+  avatar!: string;
   // posts belongsTo organizations via org_id
   org!: organizations;
   getOrg!: Sequelize.BelongsToGetAssociationMixin<organizations>;
@@ -223,6 +226,14 @@ export class posts
         },
         content: {
           type: DataTypes.TEXT,
+          allowNull: false,
+        },
+        fullname: {
+          type: DataTypes.STRING(100),
+          allowNull: false,
+        },
+        avatar: {
+          type: DataTypes.STRING(1000),
           allowNull: false,
         },
       },

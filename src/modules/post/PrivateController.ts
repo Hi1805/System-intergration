@@ -10,8 +10,7 @@ class PrivatePostController {
       const photos_url = await generatePhotoUrl(
         (files as Express.Multer.File[]) || []
       );
-      const { uid } = req.session;
-      console.log(req.session);
+      const { uid, avatar, name } = req.session;
 
       if (!uid) {
         console.log('uid not found');
@@ -39,6 +38,8 @@ class PrivatePostController {
         ward: _toString(ward),
         is_edited: 0,
         photos: photos_url.join(','),
+        avatar: _toString(avatar),
+        fullname: name,
       });
       return res.status(200).send({
         data: posts.toJSON(),

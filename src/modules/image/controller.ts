@@ -5,7 +5,6 @@ import { v1 as uuidv1 } from 'uuid';
 class ImageController {
   async getUrlImage(req: Request, res: Response) {
     try {
-      console.log(req.body);
       const { files } = <{ files: Express.Multer.File[] }>req;
       if (!files?.length) {
         return res.status(400).json({ message: 'File is not found' });
