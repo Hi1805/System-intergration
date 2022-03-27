@@ -53,7 +53,7 @@ class PrivatePostController {
 
   async deletePost(req: Request, res: Response) {
     try {
-      const { post_id } = req.query;
+      const { post_id } = req.body;
       const { uid } = req.session;
       if (!post_id) {
         return res.status(400).json({

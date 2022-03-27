@@ -1,5 +1,5 @@
 import _toString from 'lodash/toString';
-import { raw, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { mainModel } from '../../database/be_the_heroes';
 import _toNumber from 'lodash/toNumber';
 import { profilesAttributes } from '../../database/be_the_heroes/models/profiles';
