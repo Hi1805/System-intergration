@@ -274,12 +274,10 @@ class AuthController {
   async changePassword(req: Request, res: Response) {
     try {
       const { password, oldPassword } = req.body;
-      console.log(password, oldPassword);
-      const { uid, email } = req.session;
+      const { uid } = req.session;
       const user = await mainModel.users.findOne({
         where: {
           uid,
-          email,
         },
       });
       if (!user) {
@@ -305,7 +303,6 @@ class AuthController {
         {
           where: {
             uid,
-            email,
           },
         }
       );
