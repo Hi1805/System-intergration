@@ -11,4 +11,5 @@ authPrivate.post(
   AuthController.resetPassword
 );
 
+authPrivate.post('/auth/change-password', AuthController.changePassword);
 export { authPrivate };

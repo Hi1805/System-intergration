@@ -270,5 +270,54 @@ class AuthController {
       });
     }
   }
+
+  async changePassword(req: Request, res: Response) {
+    try {
+      const { password, oldPassword } = req.body;
+      console.log(password, oldPassword);
+      const { uid, email } = req.session;
+      const user = await mainModel.users.findOne({
+        where: {
+          uid,
+          email,
+        },
+      });
+      if (!user) {
+        return res.status(401).json({
+          message: 'Invalid session',
+        });
+      }
+
+      const isSafePassword = await bcrypt.compareSync(
+        _toString(oldPassword),
+        user.password
+      );
+      if (!isSafePassword) {
+        return res.status(400).json({
+          message: 'Password is incorrect',
+        });
+      }
+      const newPassWordHash = await bcrypt.hashSync(_toString(password), 10);
+      await mainModel.users.update(
+        {
+          password: newPassWordHash,
+        },
+        {
+          where: {
+            uid,
+            email,
+          },
+        }
+      );
+      return res.status(200).json({
+        message: 'Change password successfully',
+      });
+    } catch (error) {
+      console.log(error.message);
+      return res.status(500).json({
+        message: 'Internal server error',
+      });
+    }
+  }
 }
 export default new AuthController();
