@@ -12,8 +12,8 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb' }));
 const upload = multer();
 const port = process.env.PORT || 5000;
-app.use('', profileRoute);
-app.use('/api', upload.array('files', 15), apiRouter);
+
+app.use('', upload.array('files', 15), apiRouter, profileRoute);
 app.listen(port, () => {
   console.log(`Listening on http://localhost:${port}`);
 });

@@ -6,7 +6,7 @@ import { publicPostRoute } from '../../modules/post/publicRoute';
 
 const publicRoute = express.Router();
 publicRoute.use(
-  '/',
+  '/api',
   authPublicRoute,
   otpPublicRoute,
   publicPostRoute,
