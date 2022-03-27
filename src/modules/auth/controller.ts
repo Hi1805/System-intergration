@@ -239,7 +239,7 @@ class AuthController {
         {
           ...user,
           avatar: user.profile.avatar,
-          fist_name: user.profile.first_name,
+          first_name: user.profile.first_name,
           last_name: user.profile.last_name,
         },
         process.env.SECRET_KEY || '',

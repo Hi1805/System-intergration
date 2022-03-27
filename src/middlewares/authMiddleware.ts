@@ -17,6 +17,7 @@ export const authMiddleware = (
       if (err) {
         throw new Error('Token is invalid');
       }
+
       req.session = user as UserInfo;
       next();
     });
