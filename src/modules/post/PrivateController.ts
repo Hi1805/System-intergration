@@ -11,10 +11,6 @@ class PrivatePostController {
         (files as Express.Multer.File[]) || []
       );
       const { uid, avatar, first_name, last_name } = req.session;
-      console.log({
-        first_name,
-        last_name,
-      });
       const {
         title,
         province,

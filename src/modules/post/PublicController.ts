@@ -1,7 +1,9 @@
 import _toString from 'lodash/toString';
-import { Request, Response } from 'express';
+import { raw, Request, Response } from 'express';
 import { mainModel } from '../../database/be_the_heroes';
 import _toNumber from 'lodash/toNumber';
+import { profilesAttributes } from '../../database/be_the_heroes/models/profiles';
+import { usersAttributes } from '../../database/be_the_heroes/models/users';
 class PublicController {
   async getAllPost(req: Request, res: Response) {
     try {
@@ -14,14 +16,35 @@ class PublicController {
         raw: true,
         order: [['updated_at', 'DESC']],
       });
-
+      const postsList = posts.rows.map(async (item) => {
+        const user = <usersAttributes & { profile: profilesAttributes }>(
+          await mainModel.users.findOne({
+            where: {
+              uid: item.uid,
+            },
+            include: [
+              {
+                model: mainModel.profiles,
+                as: 'profile',
+                attributes: ['avatar', 'first_name', 'last_name'],
+              },
+            ],
+          })
+        );
+        return {
+          ...item,
+          avatar: user.profile.avatar,
+          first_name: user.profile.first_name,
+          last_name: user.profile.last_name,
+          fullname: user.profile.first_name + ' ' + user.profile.last_name,
+          photos:
+            item.photos && item.photos.trim() ? item.photos.split(',') : [],
+        };
+      });
+      const postResponse = await Promise.all(postsList);
       return res.status(200).send({
         data: {
-          list: posts.rows.map((item) => ({
-            ...item,
-            photos:
-              item.photos && item.photos.trim() ? item.photos.split(',') : [],
-          })),
+          list: postResponse,
           total: posts.count,
         },
         message: 'Get all post successfully',
@@ -51,13 +74,35 @@ class PublicController {
         order: [['updated_at', 'DESC']],
       });
 
+      const postsList = posts.rows.map(async (item) => {
+        const user = <usersAttributes & { profile: profilesAttributes }>(
+          await mainModel.users.findOne({
+            where: {
+              uid: item.uid,
+            },
+            include: [
+              {
+                model: mainModel.profiles,
+                as: 'profile',
+                attributes: ['avatar', 'first_name', 'last_name'],
+              },
+            ],
+          })
+        );
+        return {
+          ...item,
+          avatar: user.profile.avatar,
+          first_name: user.profile.first_name,
+          last_name: user.profile.last_name,
+          fullname: user.profile.first_name + ' ' + user.profile.last_name,
+          photos:
+            item.photos && item.photos.trim() ? item.photos.split(',') : [],
+        };
+      });
+      const postResponse = await Promise.all(postsList);
       return res.status(200).send({
         data: {
-          list: posts.rows.map((item) => ({
-            ...item,
-            photos:
-              item.photos && item.photos.trim() ? item.photos.split(',') : [],
-          })),
+          list: postResponse,
           total: posts.count,
         },
         message: 'Get all post successfully',
