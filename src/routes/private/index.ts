@@ -6,7 +6,6 @@ import { userPrivateRoute } from '../../modules/user/route';
 const privateRoute = express.Router();
 
 privateRoute.use(
-  '/api',
   authMiddleware,
   authPrivate,
   userPrivateRoute,

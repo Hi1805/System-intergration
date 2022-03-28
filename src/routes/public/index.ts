@@ -5,12 +5,6 @@ import { otpPublicRoute } from '../../modules/otp/route';
 import { publicPostRoute } from '../../modules/post/publicRoute';
 
 const publicRoute = express.Router();
-publicRoute.use(
-  '/api',
-  authPublicRoute,
-  otpPublicRoute,
-  publicPostRoute,
-  imageRoute
-);
+publicRoute.use(authPublicRoute, otpPublicRoute, publicPostRoute, imageRoute);
 
 export { publicRoute };

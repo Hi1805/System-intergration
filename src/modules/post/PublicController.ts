@@ -114,6 +114,60 @@ class PublicController {
       });
     }
   }
+  async getPostDetail(req: Request, res: Response) {
+    try {
+      const { post_id } = req.params;
+      if (!post_id) {
+        return res.status(400).json({
+          message: 'Post id is required',
+        });
+      }
+      const posts = await mainModel.posts.findOne({
+        where: {
+          post_id,
+        },
+        raw: true,
+      });
+      if (!posts) {
+        return res.status(400).json({
+          message: 'Post is not found',
+        });
+      }
+      const users = <usersAttributes & { profile: profilesAttributes }>(
+        await mainModel.users.findOne({
+          where: {
+            uid: posts.uid,
+          },
+          include: [
+            {
+              model: mainModel.profiles,
+              as: 'profile',
+              attributes: ['avatar', 'first_name', 'last_name'],
+            },
+          ],
+        })
+      );
+
+      return res.status(200).send({
+        data: {
+          ...posts,
+          avatar: users.profile.avatar,
+          first_name: users.profile.first_name,
+          last_name: users.profile.last_name,
+          fullname: users.profile.first_name + ' ' + users.profile.last_name,
+          photos:
+            posts?.photos && posts?.photos.trim()
+              ? posts?.photos.split(',')
+              : [],
+        },
+      });
+    } catch (error) {
+      console.log(error.message);
+      return res.status(500).json({
+        message: 'Internal server error',
+      });
+    }
+  }
 }
 
 export default new PublicController();
