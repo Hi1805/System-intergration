@@ -2,10 +2,8 @@
   "compilerOptions": {
     "resolveJsonModule": true,
     "incremental": true,
-    "target": "es2019",
-    "module": "commonjs",
     "allowJs": true,
-    "outDir": "./out",
+    "outDir": "./dist",
     "strict": true,
     "noImplicitAny": false,
     "strictNullChecks": true,
@@ -18,9 +16,12 @@
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "inlineSourceMap": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "useUnknownInCatchVariables": false
+    "useUnknownInCatchVariables": false,
+    "moduleResolution": "node",
+    "target": "es6",
+    "module": "commonjs",
+    "declaration": true
   }
 }

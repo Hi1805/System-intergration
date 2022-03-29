@@ -12,12 +12,18 @@ export interface reviewsAttributes {
   created_at: Date;
 }
 
-export type reviewsPk = "id" | "uid_review";
+export type reviewsPk = 'id' | 'uid_review';
 export type reviewsId = reviews[reviewsPk];
-export type reviewsOptionalAttributes = "created_at";
-export type reviewsCreationAttributes = Optional<reviewsAttributes, reviewsOptionalAttributes>;
+export type reviewsOptionalAttributes = 'created_at';
+export type reviewsCreationAttributes = Optional<
+  reviewsAttributes,
+  reviewsOptionalAttributes
+>;
 
-export class reviews extends Model<reviewsAttributes, reviewsCreationAttributes> implements reviewsAttributes {
+export class reviews
+  extends Model<reviewsAttributes, reviewsCreationAttributes>
+  implements reviewsAttributes
+{
   id!: number;
   user_id!: number;
   uid_review!: string;
@@ -28,7 +34,10 @@ export class reviews extends Model<reviewsAttributes, reviewsCreationAttributes>
   // reviews belongsTo organizations via org_id
   org!: organizations;
   getOrg!: Sequelize.BelongsToGetAssociationMixin<organizations>;
-  setOrg!: Sequelize.BelongsToSetAssociationMixin<organizations, organizationsId>;
+  setOrg!: Sequelize.BelongsToSetAssociationMixin<
+    organizations,
+    organizationsId
+  >;
   createOrg!: Sequelize.BelongsToCreateAssociationMixin<organizations>;
   // reviews belongsTo users via uid_review
   uid_review_user!: users;
@@ -42,77 +51,75 @@ export class reviews extends Model<reviewsAttributes, reviewsCreationAttributes>
   createUser!: Sequelize.BelongsToCreateAssociationMixin<users>;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof reviews {
-    return reviews.init({
-    id: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      primaryKey: true
-    },
-    user_id: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      references: {
-        model: 'users',
-        key: 'user_id'
+    return reviews.init(
+      {
+        id: {
+          type: DataTypes.BIGINT,
+          allowNull: false,
+          primaryKey: true,
+        },
+        user_id: {
+          type: DataTypes.BIGINT,
+          allowNull: false,
+          references: {
+            model: 'users',
+            key: 'user_id',
+          },
+        },
+        uid_review: {
+          type: DataTypes.STRING(30),
+          allowNull: false,
+          primaryKey: true,
+          references: {
+            model: 'users',
+            key: 'uid',
+          },
+        },
+        org_id: {
+          type: DataTypes.BIGINT,
+          allowNull: false,
+          references: {
+            model: 'organizations',
+            key: 'org_id',
+          },
+        },
+        content: {
+          type: DataTypes.STRING(200),
+          allowNull: false,
+        },
+        created_at: {
+          type: DataTypes.DATE,
+          allowNull: false,
+        },
+      },
+      {
+        sequelize,
+        tableName: 'reviews',
+        timestamps: true,
+        indexes: [
+          {
+            name: 'PRIMARY',
+            unique: true,
+            using: 'BTREE',
+            fields: [{ name: 'id' }, { name: 'uid_review' }],
+          },
+          {
+            name: 'reviews_organizations',
+            using: 'BTREE',
+            fields: [{ name: 'org_id' }],
+          },
+          {
+            name: 'reviews_users',
+            using: 'BTREE',
+            fields: [{ name: 'uid_review' }],
+          },
+          {
+            name: 'user_id_reviewed',
+            using: 'BTREE',
+            fields: [{ name: 'user_id' }],
+          },
+        ],
       }
-    },
-    uid_review: {
-      type: DataTypes.STRING(30),
-      allowNull: false,
-      primaryKey: true,
-      references: {
-        model: 'users',
-        key: 'uid'
-      }
-    },
-    org_id: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      references: {
-        model: 'organizations',
-        key: 'org_id'
-      }
-    },
-    content: {
-      type: DataTypes.STRING(200),
-      allowNull: false
-    }
-  }, {
-    sequelize,
-    tableName: 'reviews',
-    timestamps: true,
-    indexes: [
-      {
-        name: "PRIMARY",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "id" },
-          { name: "uid_review" },
-        ]
-      },
-      {
-        name: "reviews_organizations",
-        using: "BTREE",
-        fields: [
-          { name: "org_id" },
-        ]
-      },
-      {
-        name: "reviews_users",
-        using: "BTREE",
-        fields: [
-          { name: "uid_review" },
-        ]
-      },
-      {
-        name: "user_id_reviewed",
-        using: "BTREE",
-        fields: [
-          { name: "user_id" },
-        ]
-      },
-    ]
-  });
+    );
   }
 }
