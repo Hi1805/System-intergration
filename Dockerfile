@@ -10,4 +10,4 @@ RUN yarn install
 ENV NODE_ENV=production
 
 
-CMD ["yarn", "start:pro"]
+CMD ["yarn", "start:prod"]
