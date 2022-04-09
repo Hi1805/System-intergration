@@ -8,6 +8,7 @@ COPY . .
 RUN yarn install
 
 ENV NODE_ENV=production
+RUN yarn add uglifyjs-webpack-plugin
 RUN yarn build
 
 CMD ["yarn", "start:prod"]
