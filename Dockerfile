@@ -6,9 +6,9 @@ COPY package.json .
 COPY yarn.lock .
 COPY . .
 RUN yarn install
+RUN yarn build
 
 ENV NODE_ENV=production
-RUN yarn add uglifyjs-webpack-plugin
-RUN yarn build
+
 
 CMD ["yarn", "start:prod"]
