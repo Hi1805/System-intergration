@@ -143,6 +143,7 @@ class AuthController {
         last_name: _toString(last_name),
         date_of_birth: _toString(date_of_birth) || new Date().toDateString(),
         avatar: _toString(photo_url) || AVATAR_DEFAULT,
+        uid: user_info.uid,
       });
       const token = jwt.sign(
         {

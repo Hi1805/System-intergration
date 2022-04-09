@@ -70,6 +70,7 @@
     "sequelize": "^6.17.0",
     "sequelize-auto": "^0.8.8",
     "ts-node": "^10.2.1",
+    "uglifyjs-webpack-plugin": "^2.2.0",
     "uuid": "^8.3.2"
   },
   "jest": {
