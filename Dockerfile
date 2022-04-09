@@ -8,6 +8,6 @@ COPY . .
 RUN yarn install
 
 ENV NODE_ENV=production
-
+RUN YARN BUILD
 
 CMD ["yarn", "start:prod"]
