@@ -63,12 +63,23 @@ class PrivatePostController {
           message: 'Post id is required',
         });
       }
+      const comments = await mainModel.comments.findAll({
+        where: {
+          post_id: Number(post_id),
+        },
+      });
+      await Promise.all(
+        comments.map(async (comment) => {
+          await comment.destroy();
+        })
+      );
       await mainModel.posts.destroy({
         where: {
           post_id: Number(post_id),
           uid: uid,
         },
       });
+
       return res.status(200).send({
         message: `Post ${post_id} deleted successfully`,
       });

@@ -6,7 +6,9 @@ export const authMiddleware = (
   next: NextFunction
 ) => {
   try {
-    const token = req.headers['authorization']?.split(' ')[1];
+    const token =
+      req.headers['authorization']?.split(' ')[1] ||
+      (req.query.token as string);
 
     if (!token) {
       return res.status(401).send({
