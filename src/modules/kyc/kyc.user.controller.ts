@@ -1,4 +1,4 @@
-import { kyc_personalAttributes } from './../../../dist/src/database/be_the_heroes/models/kyc_personal.d';
+import { kyc_personalAttributes } from './../../database/be_the_heroes/models/kyc_personal';
 import { Request, Response } from 'express';
 import { mainModel } from '../../database/be_the_heroes';
 import { Op } from 'sequelize';
