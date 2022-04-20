@@ -30,7 +30,7 @@ class KYCUserController {
 
       return res.status(200).json({
         message: 'Success',
-        body: req.body,
+        data: kycs,
       });
     } catch (error) {
       console.log(error);
