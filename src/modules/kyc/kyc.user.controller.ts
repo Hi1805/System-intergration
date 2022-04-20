@@ -39,6 +39,38 @@ class KYCUserController {
       });
     }
   }
+
+  async getStatusKYC(req: Request, res: Response) {
+    try {
+      const { uid } = req.session;
+
+      const kyc = await mainModel.kyc_personal.findOne({
+        where: {
+          uid,
+        },
+        order: [['kyc_id', 'DESC']],
+      });
+
+      if (!kyc) {
+        return res.status(200).json({
+          message: 'You have not submitted a form',
+          data: {
+            status: 'unsent',
+          },
+        });
+      }
+
+      return res.status(200).json({
+        message: 'Success',
+        data: kyc,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: 'Internal server error',
+      });
+    }
+  }
 }
 
 export default new KYCUserController();
