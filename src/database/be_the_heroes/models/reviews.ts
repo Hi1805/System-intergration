@@ -66,6 +66,10 @@ export class reviews
           type: DataTypes.STRING(200),
           allowNull: false,
         },
+        created_at: {
+          type: DataTypes.DATE,
+          allowNull: false,
+        },
       },
       {
         sequelize,
