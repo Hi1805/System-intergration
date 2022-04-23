@@ -13,7 +13,7 @@ class PublicController {
           message: 'User id is required',
         });
       }
-      const user = <usersAttributes & { profile: profilesAttributes }>(
+      const user = <usersAttributes & { profiles: profilesAttributes }>(
         await mainModel.users.findOne({
           where: {
             uid,
@@ -21,7 +21,7 @@ class PublicController {
           include: [
             {
               model: mainModel.profiles,
-              as: 'profile',
+              as: 'profiles',
             },
           ],
         })
@@ -29,7 +29,7 @@ class PublicController {
 
       return res.status(200).json({
         data: {
-          ...user.profile,
+          ...user.profiles,
         },
         message: 'Get profile successfully',
       });

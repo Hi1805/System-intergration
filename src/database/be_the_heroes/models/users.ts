@@ -155,11 +155,11 @@ export class users
           allowNull: true,
           unique: 'uid_fb_UNIQUE',
         },
-        updated_at: {
+        created_at: {
           type: DataTypes.DATE,
           allowNull: false,
         },
-        created_at: {
+        updated_at: {
           type: DataTypes.DATE,
           allowNull: false,
         },
@@ -167,7 +167,7 @@ export class users
       {
         sequelize,
         tableName: 'users',
-        timestamps: true,
+        timestamps: false,
         indexes: [
           {
             name: 'PRIMARY',

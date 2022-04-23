@@ -223,7 +223,7 @@ class AuthController {
             include: [
               {
                 model: mainModel.profiles,
-                as: 'profile',
+                as: 'profiles',
               },
             ],
           })

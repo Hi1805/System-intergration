@@ -47,7 +47,6 @@ export class kyc_org
           type: DataTypes.INTEGER,
           allowNull: false,
         },
-
         created_at: {
           type: DataTypes.DATE,
           allowNull: false,
@@ -56,7 +55,7 @@ export class kyc_org
       {
         sequelize,
         tableName: 'kyc_org',
-        timestamps: true,
+        timestamps: false,
         indexes: [
           {
             name: 'PRIMARY',

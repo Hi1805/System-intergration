@@ -236,14 +236,6 @@ export class profiles
           type: DataTypes.STRING(100),
           allowNull: true,
         },
-        updated_at: {
-          type: DataTypes.DATE,
-          allowNull: false,
-        },
-        created_at: {
-          type: DataTypes.DATE,
-          allowNull: false,
-        },
         bio: {
           type: DataTypes.STRING(1000),
           allowNull: true,
@@ -256,11 +248,19 @@ export class profiles
           type: DataTypes.STRING(100),
           allowNull: true,
         },
+        created_at: {
+          type: DataTypes.DATE,
+          allowNull: false,
+        },
+        updated_at: {
+          type: DataTypes.DATE,
+          allowNull: false,
+        },
       },
       {
         sequelize,
         tableName: 'profiles',
-        timestamps: true,
+        timestamps: false,
         indexes: [
           {
             name: 'PRIMARY',

@@ -84,11 +84,11 @@ export class chat_messages
           type: DataTypes.STRING(1000),
           allowNull: false,
         },
-        updated_at: {
+        created_at: {
           type: DataTypes.DATE,
           allowNull: false,
         },
-        created_at: {
+        updated_at: {
           type: DataTypes.DATE,
           allowNull: false,
         },
