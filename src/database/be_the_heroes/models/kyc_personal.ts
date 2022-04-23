@@ -15,8 +15,6 @@ export interface kyc_personalAttributes {
   status: 'pending' | 'failed' | 'verified';
   province: string;
   user_ip?: string;
-  district: string;
-  ward: string;
 }
 
 export type kyc_personalPk = 'id';
@@ -49,8 +47,6 @@ export class kyc_personal
   status!: 'pending' | 'failed' | 'verified';
   province!: string;
   user_ip?: string;
-  district!: string;
-  ward!: string;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof kyc_personal {
     return kyc_personal.init(
@@ -109,14 +105,6 @@ export class kyc_personal
         user_ip: {
           type: DataTypes.STRING(45),
           allowNull: true,
-        },
-        district: {
-          type: DataTypes.STRING(50),
-          allowNull: false,
-        },
-        ward: {
-          type: DataTypes.STRING(50),
-          allowNull: false,
         },
       },
       {
