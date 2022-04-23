@@ -4,6 +4,8 @@ import { mainModel } from '../../database/be_the_heroes';
 import _toNumber from 'lodash/toNumber';
 import { profilesAttributes } from '../../database/be_the_heroes/models/profiles';
 import { usersAttributes } from '../../database/be_the_heroes/models/users';
+type userResponse = usersAttributes & { profile: profilesAttributes };
+
 class PublicController {
   async getAllPost(req: Request, res: Response) {
     try {
@@ -17,20 +19,18 @@ class PublicController {
         order: [['updated_at', 'DESC']],
       });
       const postsList = posts.rows.map(async (item) => {
-        const user = <usersAttributes & { profile: profilesAttributes }>(
-          await mainModel.users.findOne({
-            where: {
-              uid: item.uid,
+        const user = (await mainModel.users.findOne({
+          where: {
+            uid: item.uid,
+          },
+          include: [
+            {
+              model: mainModel.profiles,
+              as: 'profile',
+              attributes: ['avatar', 'first_name', 'last_name'],
             },
-            include: [
-              {
-                model: mainModel.profiles,
-                as: 'profile',
-                attributes: ['avatar', 'first_name', 'last_name'],
-              },
-            ],
-          })
-        );
+          ],
+        })) as unknown as userResponse;
         return {
           ...item,
           avatar: user.profile.avatar,
@@ -75,20 +75,18 @@ class PublicController {
       });
 
       const postsList = posts.rows.map(async (item) => {
-        const user = <usersAttributes & { profile: profilesAttributes }>(
-          await mainModel.users.findOne({
-            where: {
-              uid: item.uid,
+        const user = (await mainModel.users.findOne({
+          where: {
+            uid: item.uid,
+          },
+          include: [
+            {
+              model: mainModel.profiles,
+              as: 'profile',
+              attributes: ['avatar', 'first_name', 'last_name'],
             },
-            include: [
-              {
-                model: mainModel.profiles,
-                as: 'profile',
-                attributes: ['avatar', 'first_name', 'last_name'],
-              },
-            ],
-          })
-        );
+          ],
+        })) as unknown as userResponse;
         return {
           ...item,
           avatar: user.profile.avatar,
@@ -133,20 +131,18 @@ class PublicController {
           message: 'Post is not found',
         });
       }
-      const users = <usersAttributes & { profile: profilesAttributes }>(
-        await mainModel.users.findOne({
-          where: {
-            uid: posts.uid,
+      const users = (await mainModel.users.findOne({
+        where: {
+          uid: posts.uid,
+        },
+        include: [
+          {
+            model: mainModel.profiles,
+            as: 'profile',
+            attributes: ['avatar', 'first_name', 'last_name'],
           },
-          include: [
-            {
-              model: mainModel.profiles,
-              as: 'profile',
-              attributes: ['avatar', 'first_name', 'last_name'],
-            },
-          ],
-        })
-      );
+        ],
+      })) as unknown as userResponse;
 
       return res.status(200).send({
         data: {
