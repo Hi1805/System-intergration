@@ -48,7 +48,7 @@ class KYCUserController {
         where: {
           uid,
         },
-        order: [['kyc_id', 'DESC']],
+        order: [['id', 'DESC']],
       });
 
       if (!kyc) {

@@ -17,7 +17,7 @@ class AuthController {
       const { email, accessToken, password: passwordRequest } = req.body;
       const { type } = <{ type: typeAuth }>req.query;
 
-      const user = <usersAttributes & { profile: profilesAttributes }>(
+      const user = <usersAttributes & { profiles: profilesAttributes }>(
         await mainModel.users.findOne({
           where: {
             email: _toString(email).trim(),
@@ -25,7 +25,7 @@ class AuthController {
           include: [
             {
               model: mainModel.profiles,
-              as: 'profile',
+              as: 'profiles',
             },
           ],
           // raw: true,
@@ -60,11 +60,11 @@ class AuthController {
       const token = jwt.sign(
         {
           ...user,
-          ...user.profile,
+          ...user.profiles,
         },
         process.env.SECRET_KEY || ''
       );
-      const { profile } = user;
+      const { profiles: profile } = user;
 
       return res.status(200).json({
         data: {
@@ -213,7 +213,7 @@ class AuthController {
   async getSession(req: Request, res: Response) {
     try {
       const { uid, email } = req.session;
-      const user = <usersAttributes & { profile: profilesAttributes }>(
+      const user = <usersAttributes & { profiles: profilesAttributes }>(
         await mainModel.users
           .findOne({
             where: {
@@ -239,9 +239,9 @@ class AuthController {
       const token = jwt.sign(
         {
           ...user,
-          avatar: user.profile.avatar,
-          first_name: user.profile.first_name,
-          last_name: user.profile.last_name,
+          avatar: user.profiles.avatar,
+          first_name: user.profiles.first_name,
+          last_name: user.profiles.last_name,
         },
         process.env.SECRET_KEY || '',
         {
@@ -254,13 +254,13 @@ class AuthController {
           uid: user.uid,
           email: user.email,
           user_id: user.user_id,
-          first_name: user.profile.first_name,
-          last_name: user.profile.last_name,
-          avatar: user.profile.avatar,
+          first_name: user.profiles.first_name,
+          last_name: user.profiles.last_name,
+          avatar: user.profiles.avatar,
           level: user.level,
           role: user.role,
           is_reported: user.is_reported,
-          date_of_birth: user.profile.date_of_birth,
+          date_of_birth: user.profiles.date_of_birth,
         },
         message: 'Login successfully',
       });
