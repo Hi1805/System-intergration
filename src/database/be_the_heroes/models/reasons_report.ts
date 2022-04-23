@@ -1,6 +1,5 @@
 import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
-import type { report_users, report_usersId } from './report_users';
 
 export interface reasons_reportAttributes {
   description: string;
@@ -15,18 +14,6 @@ export class reasons_report extends Model<reasons_reportAttributes, reasons_repo
   description!: string;
   reason_id!: number;
 
-  // reasons_report hasMany report_users via reason_id
-  report_users!: report_users[];
-  getReport_users!: Sequelize.HasManyGetAssociationsMixin<report_users>;
-  setReport_users!: Sequelize.HasManySetAssociationsMixin<report_users, report_usersId>;
-  addReport_user!: Sequelize.HasManyAddAssociationMixin<report_users, report_usersId>;
-  addReport_users!: Sequelize.HasManyAddAssociationsMixin<report_users, report_usersId>;
-  createReport_user!: Sequelize.HasManyCreateAssociationMixin<report_users>;
-  removeReport_user!: Sequelize.HasManyRemoveAssociationMixin<report_users, report_usersId>;
-  removeReport_users!: Sequelize.HasManyRemoveAssociationsMixin<report_users, report_usersId>;
-  hasReport_user!: Sequelize.HasManyHasAssociationMixin<report_users, report_usersId>;
-  hasReport_users!: Sequelize.HasManyHasAssociationsMixin<report_users, report_usersId>;
-  countReport_users!: Sequelize.HasManyCountAssociationsMixin;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof reasons_report {
     return reasons_report.init({
@@ -35,7 +22,7 @@ export class reasons_report extends Model<reasons_reportAttributes, reasons_repo
       allowNull: false
     },
     reason_id: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     }

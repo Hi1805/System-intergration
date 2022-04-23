@@ -1,27 +1,19 @@
 import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
-import type { comments, commentsId } from './comments';
-import type { organizations, organizationsId } from './organizations';
-import type {
-  post_editing_histories,
-  post_editing_historiesCreationAttributes,
-  post_editing_historiesId,
-} from './post_editing_histories';
-import type { users, usersId } from './users';
+import type { chat_groups, chat_groupsId } from './chat_groups';
 
 export interface postsAttributes {
   post_id: number;
   uid?: string;
+  user_id?: number;
   org_id?: number;
   residential_address?: string;
   status: string;
-  ward: string;
-  district: string;
-  province: string;
+  ward?: string;
+  district?: string;
   long?: number;
   lat?: number;
   is_edited: number;
-  user_id?: number;
   type?: 'share' | 'post';
   end_date?: Date;
   start_date?: Date;
@@ -30,47 +22,31 @@ export interface postsAttributes {
   content_share?: string;
   photos?: string;
   title?: string;
-  joined?: number;
+  joined?: string;
   join_url?: string;
-  content: string;
-  fullname: string;
-  avatar: string;
+  content?: string;
+  fullname?: string;
+  avatar?: string;
+  province?: string;
 }
 
-export type postsPk = 'post_id';
+export type postsPk = "post_id";
 export type postsId = posts[postsPk];
-export type postsOptionalAttributes =
-  | 'post_id'
-  | 'uid'
-  | 'org_id'
-  | 'residential_address'
-  | 'user_id'
-  | 'type'
-  | 'end_date'
-  | 'start_date'
-  | 'updated_at'
-  | 'from_post'
-  | 'content_share';
-export type postsCreationAttributes = Optional<
-  postsAttributes,
-  postsOptionalAttributes
->;
+export type postsOptionalAttributes = "post_id" | "uid" | "user_id" | "org_id" | "residential_address" | "ward" | "district" | "long" | "lat" | "type" | "end_date" | "start_date" | "updated_at" | "from_post" | "content_share" | "photos" | "title" | "joined" | "join_url" | "content" | "fullname" | "avatar" | "province";
+export type postsCreationAttributes = Optional<postsAttributes, postsOptionalAttributes>;
 
-export class posts
-  extends Model<postsAttributes, postsCreationAttributes>
-  implements postsAttributes
-{
+export class posts extends Model<postsAttributes, postsCreationAttributes> implements postsAttributes {
   post_id!: number;
   uid?: string;
+  user_id?: number;
   org_id?: number;
   residential_address?: string;
   status!: string;
-  ward!: string;
-  district!: string;
-  long!: number;
-  lat!: number;
+  ward?: string;
+  district?: string;
+  long?: number;
+  lat?: number;
   is_edited!: number;
-  user_id?: number;
   type?: 'share' | 'post';
   end_date?: Date;
   start_date?: Date;
@@ -79,192 +55,163 @@ export class posts
   content_share?: string;
   photos?: string;
   title?: string;
-  joined?: number;
-  province!: string;
+  joined?: string;
   join_url?: string;
-  content!: string;
-  fullname!: string;
-  avatar!: string;
-  // posts belongsTo organizations via org_id
-  org!: organizations;
-  getOrg!: Sequelize.BelongsToGetAssociationMixin<organizations>;
-  setOrg!: Sequelize.BelongsToSetAssociationMixin<
-    organizations,
-    organizationsId
-  >;
-  createOrg!: Sequelize.BelongsToCreateAssociationMixin<organizations>;
-  // posts hasMany comments via post_id
-  comments!: comments[];
-  getComments!: Sequelize.HasManyGetAssociationsMixin<comments>;
-  setComments!: Sequelize.HasManySetAssociationsMixin<comments, commentsId>;
-  addComment!: Sequelize.HasManyAddAssociationMixin<comments, commentsId>;
-  addComments!: Sequelize.HasManyAddAssociationsMixin<comments, commentsId>;
-  createComment!: Sequelize.HasManyCreateAssociationMixin<comments>;
-  removeComment!: Sequelize.HasManyRemoveAssociationMixin<comments, commentsId>;
-  removeComments!: Sequelize.HasManyRemoveAssociationsMixin<
-    comments,
-    commentsId
-  >;
-  hasComment!: Sequelize.HasManyHasAssociationMixin<comments, commentsId>;
-  hasComments!: Sequelize.HasManyHasAssociationsMixin<comments, commentsId>;
-  countComments!: Sequelize.HasManyCountAssociationsMixin;
-  // posts hasOne post_editing_histories via id_post
-  post_editing_history!: post_editing_histories;
-  getPost_editing_history!: Sequelize.HasOneGetAssociationMixin<post_editing_histories>;
-  setPost_editing_history!: Sequelize.HasOneSetAssociationMixin<
-    post_editing_histories,
-    post_editing_historiesId
-  >;
-  createPost_editing_history!: Sequelize.HasOneCreateAssociationMixin<post_editing_histories>;
-  // posts belongsTo users via user_id
-  user!: users;
-  getUser!: Sequelize.BelongsToGetAssociationMixin<users>;
-  setUser!: Sequelize.BelongsToSetAssociationMixin<users, usersId>;
-  createUser!: Sequelize.BelongsToCreateAssociationMixin<users>;
+  content?: string;
+  fullname?: string;
+  avatar?: string;
+  province?: string;
+
+  // posts hasMany chat_groups via for_post
+  chat_groups!: chat_groups[];
+  getChat_groups!: Sequelize.HasManyGetAssociationsMixin<chat_groups>;
+  setChat_groups!: Sequelize.HasManySetAssociationsMixin<chat_groups, chat_groupsId>;
+  addChat_group!: Sequelize.HasManyAddAssociationMixin<chat_groups, chat_groupsId>;
+  addChat_groups!: Sequelize.HasManyAddAssociationsMixin<chat_groups, chat_groupsId>;
+  createChat_group!: Sequelize.HasManyCreateAssociationMixin<chat_groups>;
+  removeChat_group!: Sequelize.HasManyRemoveAssociationMixin<chat_groups, chat_groupsId>;
+  removeChat_groups!: Sequelize.HasManyRemoveAssociationsMixin<chat_groups, chat_groupsId>;
+  hasChat_group!: Sequelize.HasManyHasAssociationMixin<chat_groups, chat_groupsId>;
+  hasChat_groups!: Sequelize.HasManyHasAssociationsMixin<chat_groups, chat_groupsId>;
+  countChat_groups!: Sequelize.HasManyCountAssociationsMixin;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof posts {
-    return posts.init(
+    return posts.init({
+    post_id: {
+      autoIncrement: true,
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true
+    },
+    uid: {
+      type: DataTypes.STRING(100),
+      allowNull: true
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    org_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    residential_address: {
+      type: DataTypes.STRING(1000),
+      allowNull: true
+    },
+    status: {
+      type: DataTypes.STRING(45),
+      allowNull: false
+    },
+    ward: {
+      type: DataTypes.STRING(100),
+      allowNull: true
+    },
+    district: {
+      type: DataTypes.STRING(100),
+      allowNull: true
+    },
+    long: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    lat: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    is_edited: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false
+    },
+    type: {
+      type: DataTypes.ENUM('share','post'),
+      allowNull: true,
+      defaultValue: "post"
+    },
+    end_date: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    start_date: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    from_post: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    content_share: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    photos: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    title: {
+      type: DataTypes.STRING(100),
+      allowNull: true
+    },
+    joined: {
+      type: DataTypes.STRING(100),
+      allowNull: true
+    },
+    join_url: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    content: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    fullname: {
+      type: DataTypes.STRING(100),
+      allowNull: true
+    },
+    avatar: {
+      type: DataTypes.STRING(100),
+      allowNull: true
+    },
+    province: {
+      type: DataTypes.STRING(45),
+      allowNull: true
+    }
+  }, {
+    sequelize,
+    tableName: 'posts',
+    timestamps: true,
+    indexes: [
       {
-        post_id: {
-          autoIncrement: true,
-          type: DataTypes.BIGINT,
-          allowNull: false,
-          primaryKey: true,
-        },
-        uid: {
-          type: DataTypes.STRING(100),
-          allowNull: true,
-        },
-        org_id: {
-          type: DataTypes.BIGINT,
-          allowNull: true,
-          references: {
-            model: 'organizations',
-            key: 'org_id',
-          },
-        },
-        residential_address: {
-          type: DataTypes.STRING(1000),
-          allowNull: true,
-        },
-        status: {
-          type: DataTypes.STRING(45),
-          allowNull: false,
-        },
-        ward: {
-          type: DataTypes.STRING(100),
-          allowNull: false,
-        },
-        district: {
-          type: DataTypes.STRING(100),
-          allowNull: false,
-        },
-        long: {
-          type: DataTypes.INTEGER,
-          allowNull: true,
-        },
-        lat: {
-          type: DataTypes.INTEGER,
-          allowNull: true,
-        },
-        is_edited: {
-          type: DataTypes.BOOLEAN,
-          allowNull: false,
-        },
-        user_id: {
-          type: DataTypes.BIGINT,
-          allowNull: true,
-          references: {
-            model: 'users',
-            key: 'user_id',
-          },
-        },
-        type: {
-          type: DataTypes.ENUM('share', 'post'),
-          allowNull: true,
-          defaultValue: 'post',
-        },
-        end_date: {
-          type: DataTypes.DATE,
-          allowNull: true,
-        },
-        start_date: {
-          type: DataTypes.DATE,
-          allowNull: true,
-        },
-        from_post: {
-          type: DataTypes.BIGINT,
-          allowNull: true,
-        },
-        content_share: {
-          type: DataTypes.TEXT,
-          allowNull: true,
-        },
-        joined: {
-          type: DataTypes.INTEGER,
-          allowNull: true,
-        },
-        updated_at: {
-          type: DataTypes.DATE,
-          allowNull: true,
-        },
-        photos: {
-          type: DataTypes.TEXT,
-          allowNull: true,
-        },
-        title: {
-          type: DataTypes.STRING(1000),
-          allowNull: true,
-        },
-        province: {
-          type: DataTypes.STRING(100),
-          allowNull: false,
-        },
-        join_url: {
-          type: DataTypes.STRING(1000),
-          allowNull: true,
-        },
-        content: {
-          type: DataTypes.TEXT,
-          allowNull: false,
-        },
-        fullname: {
-          type: DataTypes.STRING(100),
-          allowNull: false,
-        },
-        avatar: {
-          type: DataTypes.STRING(1000),
-          allowNull: false,
-        },
+        name: "PRIMARY",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "post_id" },
+        ]
       },
       {
-        sequelize,
-        tableName: 'posts',
-        indexes: [
-          {
-            name: 'PRIMARY',
-            unique: true,
-            using: 'BTREE',
-            fields: [{ name: 'post_id' }],
-          },
-          {
-            name: 'id_post',
-            unique: true,
-            using: 'BTREE',
-            fields: [{ name: 'post_id' }],
-          },
-          {
-            name: 'posts_organizations',
-            using: 'BTREE',
-            fields: [{ name: 'org_id' }],
-          },
-          {
-            name: 'posts_users',
-            using: 'BTREE',
-            fields: [{ name: 'user_id' }],
-          },
-        ],
-      }
-    );
+        name: "id_post",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "post_id" },
+        ]
+      },
+      {
+        name: "posts_organizations",
+        using: "BTREE",
+        fields: [
+          { name: "org_id" },
+        ]
+      },
+      {
+        name: "posts_users",
+        using: "BTREE",
+        fields: [
+          { name: "user_id" },
+        ]
+      },
+    ]
+  });
   }
 }

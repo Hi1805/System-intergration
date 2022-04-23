@@ -1,8 +1,5 @@
 import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
-import type { organizations, organizationsId } from './organizations';
-import type { reasons_report, reasons_reportId } from './reasons_report';
-import type { users, usersId } from './users';
 
 export interface report_usersAttributes {
   report_id: number;
@@ -26,27 +23,12 @@ export class report_users extends Model<report_usersAttributes, report_usersCrea
   reason_id!: number;
   org_id!: number;
 
-  // report_users belongsTo organizations via org_id
-  org!: organizations;
-  getOrg!: Sequelize.BelongsToGetAssociationMixin<organizations>;
-  setOrg!: Sequelize.BelongsToSetAssociationMixin<organizations, organizationsId>;
-  createOrg!: Sequelize.BelongsToCreateAssociationMixin<organizations>;
-  // report_users belongsTo reasons_report via reason_id
-  reason!: reasons_report;
-  getReason!: Sequelize.BelongsToGetAssociationMixin<reasons_report>;
-  setReason!: Sequelize.BelongsToSetAssociationMixin<reasons_report, reasons_reportId>;
-  createReason!: Sequelize.BelongsToCreateAssociationMixin<reasons_report>;
-  // report_users belongsTo users via user_id
-  user!: users;
-  getUser!: Sequelize.BelongsToGetAssociationMixin<users>;
-  setUser!: Sequelize.BelongsToSetAssociationMixin<users, usersId>;
-  createUser!: Sequelize.BelongsToCreateAssociationMixin<users>;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof report_users {
     return report_users.init({
     report_id: {
       autoIncrement: true,
-      type: DataTypes.BIGINT,
+      type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
@@ -60,29 +42,17 @@ export class report_users extends Model<report_usersAttributes, report_usersCrea
       allowNull: true
     },
     user_id: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
-      references: {
-        model: 'users',
-        key: 'user_id'
-      }
+      primaryKey: true
     },
     reason_id: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      references: {
-        model: 'reasons_report',
-        key: 'reason_id'
-      }
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
     org_id: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      references: {
-        model: 'organizations',
-        key: 'org_id'
-      }
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   }, {
     sequelize,

@@ -3,9 +3,8 @@ import { mainModel } from '../../database/be_the_heroes';
 import _toString from 'lodash/toString';
 import { generatePhotoUrl } from '../../helpers/gernarate';
 import { AVATAR_DEFAULT } from '../auth';
-import { usersAttributes } from '../../database/be_the_heroes/models/users';
-import { profilesAttributes } from '../../database/be_the_heroes/models/profiles';
 import { postsAttributes } from '../../database/be_the_heroes/models/posts';
+
 class PrivatePostController {
   async createPost(req: Request, res: Response) {
     try {
@@ -30,7 +29,7 @@ class PrivatePostController {
         title: _toString(title),
         province: _toString(province),
         type: 'post',
-        status: 'oke',
+        status: 'active',
         join_url: _toString(join_url),
         residential_address: _toString(residential_address),
         content: _toString(content),

@@ -1,7 +1,5 @@
 import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
-import type { organizations, organizationsId } from './organizations';
-import type { users, usersId } from './users';
 
 export interface permissionsAttributes {
   org_id: number;
@@ -22,35 +20,17 @@ export class permissions extends Model<permissionsAttributes, permissionsCreatio
   name!: string;
   avatar!: string;
 
-  // permissions belongsTo organizations via org_id
-  org!: organizations;
-  getOrg!: Sequelize.BelongsToGetAssociationMixin<organizations>;
-  setOrg!: Sequelize.BelongsToSetAssociationMixin<organizations, organizationsId>;
-  createOrg!: Sequelize.BelongsToCreateAssociationMixin<organizations>;
-  // permissions belongsTo users via user_id
-  user!: users;
-  getUser!: Sequelize.BelongsToGetAssociationMixin<users>;
-  setUser!: Sequelize.BelongsToSetAssociationMixin<users, usersId>;
-  createUser!: Sequelize.BelongsToCreateAssociationMixin<users>;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof permissions {
     return permissions.init({
     org_id: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
-      references: {
-        model: 'organizations',
-        key: 'org_id'
-      }
+      primaryKey: true
     },
     user_id: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      references: {
-        model: 'users',
-        key: 'user_id'
-      }
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
     role: {
       type: DataTypes.STRING(50),

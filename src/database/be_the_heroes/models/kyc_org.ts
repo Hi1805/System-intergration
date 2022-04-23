@@ -1,7 +1,5 @@
 import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
-import type { organizations, organizationsId } from './organizations';
-import type { reasons_kyc, reasons_kycId } from './reasons_kyc';
 
 export interface kyc_orgAttributes {
   org_id: number;
@@ -29,34 +27,13 @@ export class kyc_org
   update_at!: Date;
   reason_id!: number;
 
-  // kyc_org belongsTo organizations via org_id
-  org!: organizations;
-  getOrg!: Sequelize.BelongsToGetAssociationMixin<organizations>;
-  setOrg!: Sequelize.BelongsToSetAssociationMixin<
-    organizations,
-    organizationsId
-  >;
-  createOrg!: Sequelize.BelongsToCreateAssociationMixin<organizations>;
-  // kyc_org belongsTo reasons_kyc via reason_id
-  reason!: reasons_kyc;
-  getReason!: Sequelize.BelongsToGetAssociationMixin<reasons_kyc>;
-  setReason!: Sequelize.BelongsToSetAssociationMixin<
-    reasons_kyc,
-    reasons_kycId
-  >;
-  createReason!: Sequelize.BelongsToCreateAssociationMixin<reasons_kyc>;
-
   static initModel(sequelize: Sequelize.Sequelize): typeof kyc_org {
     return kyc_org.init(
       {
         org_id: {
-          type: DataTypes.BIGINT,
+          type: DataTypes.INTEGER,
           allowNull: false,
           primaryKey: true,
-          references: {
-            model: 'organizations',
-            key: 'org_id',
-          },
         },
         document_photo: {
           type: DataTypes.STRING(200),
@@ -67,13 +44,10 @@ export class kyc_org
           allowNull: false,
         },
         reason_id: {
-          type: DataTypes.BIGINT,
+          type: DataTypes.INTEGER,
           allowNull: false,
-          references: {
-            model: 'reasons_kyc',
-            key: 'reason_id',
-          },
         },
+
         created_at: {
           type: DataTypes.DATE,
           allowNull: false,

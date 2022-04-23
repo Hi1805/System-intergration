@@ -1,20 +1,13 @@
 import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
-import type { comments, commentsId } from './comments';
 import type { levels, levelsId } from './levels';
-import type { permissions, permissionsId } from './permissions';
-import type { posts, postsId } from './posts';
-import type {
-  profiles,
-  profilesCreationAttributes,
-  profilesId,
-} from './profiles';
-import type { report_users, report_usersId } from './report_users';
+import type { profiles, profilesId } from './profiles';
 import type { reviews, reviewsId } from './reviews';
 
 export interface usersAttributes {
   user_id: number;
   uid: string;
+  status?: number;
   level: number;
   username: string;
   is_reported: number;
@@ -22,18 +15,19 @@ export interface usersAttributes {
   role: number;
   is_otp: number;
   password: string;
-  email: string;
-  status: number;
+  email?: string;
   updated_at: Date;
   created_at: Date;
   uid_gg?: string;
   uid_fb?: string;
 }
 
-export type usersPk = 'user_id' | 'uid' | 'status';
+export type usersPk = 'user_id' | 'uid';
 export type usersId = users[usersPk];
 export type usersOptionalAttributes =
   | 'user_id'
+  | 'status'
+  | 'email'
   | 'updated_at'
   | 'created_at'
   | 'uid_gg'
@@ -49,6 +43,7 @@ export class users
 {
   user_id!: number;
   uid!: string;
+  status?: number;
   level!: number;
   username!: string;
   is_reported!: number;
@@ -56,8 +51,7 @@ export class users
   role!: number;
   is_otp!: number;
   password!: string;
-  email!: string;
-  status!: number;
+  email?: string;
   updated_at!: Date;
   created_at!: Date;
   uid_gg?: string;
@@ -68,104 +62,21 @@ export class users
   getLevel_level!: Sequelize.BelongsToGetAssociationMixin<levels>;
   setLevel_level!: Sequelize.BelongsToSetAssociationMixin<levels, levelsId>;
   createLevel_level!: Sequelize.BelongsToCreateAssociationMixin<levels>;
-  // users hasMany comments via uid
-  comments!: comments[];
-  getComments!: Sequelize.HasManyGetAssociationsMixin<comments>;
-  setComments!: Sequelize.HasManySetAssociationsMixin<comments, commentsId>;
-  addComment!: Sequelize.HasManyAddAssociationMixin<comments, commentsId>;
-  addComments!: Sequelize.HasManyAddAssociationsMixin<comments, commentsId>;
-  createComment!: Sequelize.HasManyCreateAssociationMixin<comments>;
-  removeComment!: Sequelize.HasManyRemoveAssociationMixin<comments, commentsId>;
-  removeComments!: Sequelize.HasManyRemoveAssociationsMixin<
-    comments,
-    commentsId
+  // users hasMany profiles via user_id
+  profiles!: profiles[];
+  getProfiles!: Sequelize.HasManyGetAssociationsMixin<profiles>;
+  setProfiles!: Sequelize.HasManySetAssociationsMixin<profiles, profilesId>;
+  addProfile!: Sequelize.HasManyAddAssociationMixin<profiles, profilesId>;
+  addProfiles!: Sequelize.HasManyAddAssociationsMixin<profiles, profilesId>;
+  createProfile!: Sequelize.HasManyCreateAssociationMixin<profiles>;
+  removeProfile!: Sequelize.HasManyRemoveAssociationMixin<profiles, profilesId>;
+  removeProfiles!: Sequelize.HasManyRemoveAssociationsMixin<
+    profiles,
+    profilesId
   >;
-  hasComment!: Sequelize.HasManyHasAssociationMixin<comments, commentsId>;
-  hasComments!: Sequelize.HasManyHasAssociationsMixin<comments, commentsId>;
-  countComments!: Sequelize.HasManyCountAssociationsMixin;
-  // users hasMany permissions via user_id
-  permissions!: permissions[];
-  getPermissions!: Sequelize.HasManyGetAssociationsMixin<permissions>;
-  setPermissions!: Sequelize.HasManySetAssociationsMixin<
-    permissions,
-    permissionsId
-  >;
-  addPermission!: Sequelize.HasManyAddAssociationMixin<
-    permissions,
-    permissionsId
-  >;
-  addPermissions!: Sequelize.HasManyAddAssociationsMixin<
-    permissions,
-    permissionsId
-  >;
-  createPermission!: Sequelize.HasManyCreateAssociationMixin<permissions>;
-  removePermission!: Sequelize.HasManyRemoveAssociationMixin<
-    permissions,
-    permissionsId
-  >;
-  removePermissions!: Sequelize.HasManyRemoveAssociationsMixin<
-    permissions,
-    permissionsId
-  >;
-  hasPermission!: Sequelize.HasManyHasAssociationMixin<
-    permissions,
-    permissionsId
-  >;
-  hasPermissions!: Sequelize.HasManyHasAssociationsMixin<
-    permissions,
-    permissionsId
-  >;
-  countPermissions!: Sequelize.HasManyCountAssociationsMixin;
-  // users hasMany posts via user_id
-  posts!: posts[];
-  getPosts!: Sequelize.HasManyGetAssociationsMixin<posts>;
-  setPosts!: Sequelize.HasManySetAssociationsMixin<posts, postsId>;
-  addPost!: Sequelize.HasManyAddAssociationMixin<posts, postsId>;
-  addPosts!: Sequelize.HasManyAddAssociationsMixin<posts, postsId>;
-  createPost!: Sequelize.HasManyCreateAssociationMixin<posts>;
-  removePost!: Sequelize.HasManyRemoveAssociationMixin<posts, postsId>;
-  removePosts!: Sequelize.HasManyRemoveAssociationsMixin<posts, postsId>;
-  hasPost!: Sequelize.HasManyHasAssociationMixin<posts, postsId>;
-  hasPosts!: Sequelize.HasManyHasAssociationsMixin<posts, postsId>;
-  countPosts!: Sequelize.HasManyCountAssociationsMixin;
-  // users hasOne profiles via user_id
-  profile!: profiles;
-  getProfile!: Sequelize.HasOneGetAssociationMixin<profiles>;
-  setProfile!: Sequelize.HasOneSetAssociationMixin<profiles, profilesId>;
-  createProfile!: Sequelize.HasOneCreateAssociationMixin<profiles>;
-  // users hasMany report_users via user_id
-  report_users!: report_users[];
-  getReport_users!: Sequelize.HasManyGetAssociationsMixin<report_users>;
-  setReport_users!: Sequelize.HasManySetAssociationsMixin<
-    report_users,
-    report_usersId
-  >;
-  addReport_user!: Sequelize.HasManyAddAssociationMixin<
-    report_users,
-    report_usersId
-  >;
-  addReport_users!: Sequelize.HasManyAddAssociationsMixin<
-    report_users,
-    report_usersId
-  >;
-  createReport_user!: Sequelize.HasManyCreateAssociationMixin<report_users>;
-  removeReport_user!: Sequelize.HasManyRemoveAssociationMixin<
-    report_users,
-    report_usersId
-  >;
-  removeReport_users!: Sequelize.HasManyRemoveAssociationsMixin<
-    report_users,
-    report_usersId
-  >;
-  hasReport_user!: Sequelize.HasManyHasAssociationMixin<
-    report_users,
-    report_usersId
-  >;
-  hasReport_users!: Sequelize.HasManyHasAssociationsMixin<
-    report_users,
-    report_usersId
-  >;
-  countReport_users!: Sequelize.HasManyCountAssociationsMixin;
+  hasProfile!: Sequelize.HasManyHasAssociationMixin<profiles, profilesId>;
+  hasProfiles!: Sequelize.HasManyHasAssociationsMixin<profiles, profilesId>;
+  countProfiles!: Sequelize.HasManyCountAssociationsMixin;
   // users hasMany reviews via uid_review
   reviews!: reviews[];
   getReviews!: Sequelize.HasManyGetAssociationsMixin<reviews>;
@@ -178,31 +89,13 @@ export class users
   hasReview!: Sequelize.HasManyHasAssociationMixin<reviews, reviewsId>;
   hasReviews!: Sequelize.HasManyHasAssociationsMixin<reviews, reviewsId>;
   countReviews!: Sequelize.HasManyCountAssociationsMixin;
-  // users hasMany reviews via user_id
-  user_reviews!: reviews[];
-  getUser_reviews!: Sequelize.HasManyGetAssociationsMixin<reviews>;
-  setUser_reviews!: Sequelize.HasManySetAssociationsMixin<reviews, reviewsId>;
-  addUser_review!: Sequelize.HasManyAddAssociationMixin<reviews, reviewsId>;
-  addUser_reviews!: Sequelize.HasManyAddAssociationsMixin<reviews, reviewsId>;
-  createUser_review!: Sequelize.HasManyCreateAssociationMixin<reviews>;
-  removeUser_review!: Sequelize.HasManyRemoveAssociationMixin<
-    reviews,
-    reviewsId
-  >;
-  removeUser_reviews!: Sequelize.HasManyRemoveAssociationsMixin<
-    reviews,
-    reviewsId
-  >;
-  hasUser_review!: Sequelize.HasManyHasAssociationMixin<reviews, reviewsId>;
-  hasUser_reviews!: Sequelize.HasManyHasAssociationsMixin<reviews, reviewsId>;
-  countUser_reviews!: Sequelize.HasManyCountAssociationsMixin;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof users {
     return users.init(
       {
         user_id: {
           autoIncrement: true,
-          type: DataTypes.BIGINT,
+          type: DataTypes.INTEGER,
           allowNull: false,
           primaryKey: true,
         },
@@ -210,6 +103,10 @@ export class users
           type: DataTypes.STRING(100),
           allowNull: false,
           primaryKey: true,
+        },
+        status: {
+          type: DataTypes.BOOLEAN,
+          allowNull: true,
         },
         level: {
           type: DataTypes.INTEGER,
@@ -247,22 +144,16 @@ export class users
           type: DataTypes.STRING(200),
           allowNull: true,
           unique: 'email_UNIQUE',
-          validate: {
-            isEmail: true,
-          },
-        },
-        status: {
-          type: DataTypes.BOOLEAN,
-          allowNull: false,
-          primaryKey: true,
         },
         uid_gg: {
           type: DataTypes.STRING(200),
           allowNull: true,
+          unique: 'uid_gg_UNIQUE',
         },
         uid_fb: {
           type: DataTypes.STRING(200),
           allowNull: true,
+          unique: 'uid_fb_UNIQUE',
         },
         updated_at: {
           type: DataTypes.DATE,
@@ -276,13 +167,13 @@ export class users
       {
         sequelize,
         tableName: 'users',
-        timestamps: false,
+        timestamps: true,
         indexes: [
           {
             name: 'PRIMARY',
             unique: true,
             using: 'BTREE',
-            fields: [{ name: 'user_id' }, { name: 'uid' }, { name: 'status' }],
+            fields: [{ name: 'user_id' }, { name: 'uid' }],
           },
           {
             name: 'uid',
@@ -301,6 +192,18 @@ export class users
             unique: true,
             using: 'BTREE',
             fields: [{ name: 'email' }],
+          },
+          {
+            name: 'uid_fb_UNIQUE',
+            unique: true,
+            using: 'BTREE',
+            fields: [{ name: 'uid_fb' }],
+          },
+          {
+            name: 'uid_gg_UNIQUE',
+            unique: true,
+            using: 'BTREE',
+            fields: [{ name: 'uid_gg' }],
           },
           {
             name: 'users_levels',

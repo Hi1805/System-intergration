@@ -1,8 +1,12 @@
 import type { Sequelize } from "sequelize";
+import { chat_groups as _chat_groups } from "./chat_groups";
+import type { chat_groupsAttributes, chat_groupsCreationAttributes } from "./chat_groups";
+import { chat_messages as _chat_messages } from "./chat_messages";
+import type { chat_messagesAttributes, chat_messagesCreationAttributes } from "./chat_messages";
 import { comments as _comments } from "./comments";
 import type { commentsAttributes, commentsCreationAttributes } from "./comments";
-import { comments_photo as _comments_photo } from "./comments_photo";
-import type { comments_photoAttributes, comments_photoCreationAttributes } from "./comments_photo";
+import { config_chat_group as _config_chat_group } from "./config_chat_group";
+import type { config_chat_groupAttributes, config_chat_groupCreationAttributes } from "./config_chat_group";
 import { kyc_org as _kyc_org } from "./kyc_org";
 import type { kyc_orgAttributes, kyc_orgCreationAttributes } from "./kyc_org";
 import { kyc_personal as _kyc_personal } from "./kyc_personal";
@@ -31,8 +35,10 @@ import { users as _users } from "./users";
 import type { usersAttributes, usersCreationAttributes } from "./users";
 
 export {
+  _chat_groups as chat_groups,
+  _chat_messages as chat_messages,
   _comments as comments,
-  _comments_photo as comments_photo,
+  _config_chat_group as config_chat_group,
   _kyc_org as kyc_org,
   _kyc_personal as kyc_personal,
   _levels as levels,
@@ -49,10 +55,14 @@ export {
 };
 
 export type {
+  chat_groupsAttributes,
+  chat_groupsCreationAttributes,
+  chat_messagesAttributes,
+  chat_messagesCreationAttributes,
   commentsAttributes,
   commentsCreationAttributes,
-  comments_photoAttributes,
-  comments_photoCreationAttributes,
+  config_chat_groupAttributes,
+  config_chat_groupCreationAttributes,
   kyc_orgAttributes,
   kyc_orgCreationAttributes,
   kyc_personalAttributes,
@@ -82,8 +92,10 @@ export type {
 };
 
 export function initModels(sequelize: Sequelize) {
+  const chat_groups = _chat_groups.initModel(sequelize);
+  const chat_messages = _chat_messages.initModel(sequelize);
   const comments = _comments.initModel(sequelize);
-  const comments_photo = _comments_photo.initModel(sequelize);
+  const config_chat_group = _config_chat_group.initModel(sequelize);
   const kyc_org = _kyc_org.initModel(sequelize);
   const kyc_personal = _kyc_personal.initModel(sequelize);
   const levels = _levels.initModel(sequelize);
@@ -98,48 +110,32 @@ export function initModels(sequelize: Sequelize) {
   const reviews = _reviews.initModel(sequelize);
   const users = _users.initModel(sequelize);
 
-  comments_photo.belongsTo(comments, { as: "comment", foreignKey: "comment_id"});
-  comments.hasMany(comments_photo, { as: "comments_photos", foreignKey: "comment_id"});
+  config_chat_group.belongsToMany(profiles, { as: 'uid_profiles', through: chat_messages, foreignKey: "to_group", otherKey: "uid" });
+  profiles.belongsToMany(config_chat_group, { as: 'to_group_config_chat_groups', through: chat_messages, foreignKey: "uid", otherKey: "to_group" });
+  chat_groups.belongsTo(config_chat_group, { as: "group_chat", foreignKey: "group_chat_id"});
+  config_chat_group.hasMany(chat_groups, { as: "chat_groups", foreignKey: "group_chat_id"});
+  chat_messages.belongsTo(config_chat_group, { as: "to_group_config_chat_group", foreignKey: "to_group"});
+  config_chat_group.hasMany(chat_messages, { as: "chat_messages", foreignKey: "to_group"});
   users.belongsTo(levels, { as: "level_level", foreignKey: "level"});
   levels.hasMany(users, { as: "users", foreignKey: "level"});
-  kyc_org.belongsTo(organizations, { as: "org", foreignKey: "org_id"});
-  organizations.hasOne(kyc_org, { as: "kyc_org", foreignKey: "org_id"});
-  permissions.belongsTo(organizations, { as: "org", foreignKey: "org_id"});
-  organizations.hasOne(permissions, { as: "permission", foreignKey: "org_id"});
-  posts.belongsTo(organizations, { as: "org", foreignKey: "org_id"});
-  organizations.hasMany(posts, { as: "posts", foreignKey: "org_id"});
-  report_users.belongsTo(organizations, { as: "org", foreignKey: "org_id"});
-  organizations.hasMany(report_users, { as: "report_users", foreignKey: "org_id"});
-  reviews.belongsTo(organizations, { as: "org", foreignKey: "org_id"});
-  organizations.hasMany(reviews, { as: "reviews", foreignKey: "org_id"});
-  comments.belongsTo(posts, { as: "post", foreignKey: "post_id"});
-  posts.hasMany(comments, { as: "comments", foreignKey: "post_id"});
-  post_editing_histories.belongsTo(posts, { as: "id_post_post", foreignKey: "id_post"});
-  posts.hasOne(post_editing_histories, { as: "post_editing_history", foreignKey: "id_post"});
-  kyc_org.belongsTo(reasons_kyc, { as: "reason", foreignKey: "reason_id"});
-  reasons_kyc.hasMany(kyc_org, { as: "kyc_orgs", foreignKey: "reason_id"});
-  kyc_personal.belongsTo(reasons_kyc, { as: "reason", foreignKey: "reason_id"});
-  reasons_kyc.hasMany(kyc_personal, { as: "kyc_personals", foreignKey: "reason_id"});
-  report_users.belongsTo(reasons_report, { as: "reason", foreignKey: "reason_id"});
-  reasons_report.hasMany(report_users, { as: "report_users", foreignKey: "reason_id"});
-  comments.belongsTo(users, { as: "uid_user", foreignKey: "uid"});
-  users.hasMany(comments, { as: "comments", foreignKey: "uid"});
-  permissions.belongsTo(users, { as: "user", foreignKey: "user_id"});
-  users.hasMany(permissions, { as: "permissions", foreignKey: "user_id"});
-  posts.belongsTo(users, { as: "user", foreignKey: "user_id"});
-  users.hasMany(posts, { as: "posts", foreignKey: "user_id"});
+  chat_groups.belongsTo(posts, { as: "for_post_post", foreignKey: "for_post"});
+  posts.hasMany(chat_groups, { as: "chat_groups", foreignKey: "for_post"});
+  chat_groups.belongsTo(profiles, { as: "member_u", foreignKey: "member_uid"});
+  profiles.hasMany(chat_groups, { as: "chat_groups", foreignKey: "member_uid"});
+  chat_messages.belongsTo(profiles, { as: "uid_profile", foreignKey: "uid"});
+  profiles.hasMany(chat_messages, { as: "chat_messages", foreignKey: "uid"});
+  comments.belongsTo(profiles, { as: "uid_profile", foreignKey: "uid"});
+  profiles.hasMany(comments, { as: "comments", foreignKey: "uid"});
   profiles.belongsTo(users, { as: "user", foreignKey: "user_id"});
-  users.hasOne(profiles, { as: "profile", foreignKey: "user_id"});
-  report_users.belongsTo(users, { as: "user", foreignKey: "user_id"});
-  users.hasMany(report_users, { as: "report_users", foreignKey: "user_id"});
+  users.hasMany(profiles, { as: "profiles", foreignKey: "user_id"});
   reviews.belongsTo(users, { as: "uid_review_user", foreignKey: "uid_review"});
   users.hasMany(reviews, { as: "reviews", foreignKey: "uid_review"});
-  reviews.belongsTo(users, { as: "user", foreignKey: "user_id"});
-  users.hasMany(reviews, { as: "user_reviews", foreignKey: "user_id"});
 
   return {
+    chat_groups: chat_groups,
+    chat_messages: chat_messages,
     comments: comments,
-    comments_photo: comments_photo,
+    config_chat_group: config_chat_group,
     kyc_org: kyc_org,
     kyc_personal: kyc_personal,
     levels: levels,
