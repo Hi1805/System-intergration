@@ -4,6 +4,7 @@ import _toString from 'lodash/toString';
 import { generatePhotoUrl } from '../../helpers/gernarate';
 import { AVATAR_DEFAULT } from '../auth';
 import { postsAttributes } from '../../database/be_the_heroes/models/posts';
+import { toNumber } from 'lodash';
 
 class PrivatePostController {
   async createPost(req: Request, res: Response) {
@@ -24,14 +25,16 @@ class PrivatePostController {
         isCreateChat,
       } = req.body;
 
+      const post_id = _toString(new Date().getTime());
       const posts = await mainModel.posts.create({
         district: _toString(district),
         uid: uid,
+        post_id: post_id,
         title: _toString(title),
         province: _toString(province),
+        join_url: isCreateChat ? `/chat/${post_id}` : _toString(join_url),
         type: 'post',
-        status: 'activez',
-        join_url: _toString(join_url),
+        status: 'active',
         residential_address: _toString(residential_address),
         content: _toString(content),
         ward: _toString(ward),
@@ -39,7 +42,7 @@ class PrivatePostController {
         photos: photos_url.join(','),
         avatar: _toString(avatar) || AVATAR_DEFAULT,
         fullname: _toString(first_name) + ' ' + _toString(last_name),
-        updated_at: new Date(),
+        updated_at: new Date(Date.now()),
       });
 
       Boolean(isCreateChat) &&
@@ -53,7 +56,9 @@ class PrivatePostController {
         (await mainModel.chat_groups.create({
           group_chat_id: _toString(posts.post_id),
           member_uid: uid,
-          for_post: posts.post_id,
+          for_post: toNumber(posts.post_id),
+          created_at: new Date(),
+          updated_at: new Date(),
         }));
       return res.status(200).send({
         data: posts.toJSON(),
@@ -61,7 +66,6 @@ class PrivatePostController {
       });
     } catch (error) {
       console.log(error.message);
-
       return res.status(500).json({
         message: 'Internal server error',
       });

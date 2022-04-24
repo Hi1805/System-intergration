@@ -70,10 +70,6 @@ export class chat_groups
         for_post: {
           type: DataTypes.INTEGER,
           allowNull: true,
-          references: {
-            model: 'posts',
-            key: 'post_id',
-          },
         },
         member_uid: {
           type: DataTypes.STRING(100),
@@ -115,11 +111,6 @@ export class chat_groups
             name: 'fk_chat_groups_2_idx',
             using: 'BTREE',
             fields: [{ name: 'member_uid' }],
-          },
-          {
-            name: 'fk_chat_groups_1_idx',
-            using: 'BTREE',
-            fields: [{ name: 'for_post' }],
           },
           {
             name: 'fk_chat_groups_3_idx',

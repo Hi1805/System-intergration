@@ -29,7 +29,7 @@ class PublicController {
 
       return res.status(200).json({
         data: {
-          ...user.profiles,
+          ...user.profiles[0],
         },
         message: 'Get profile successfully',
       });

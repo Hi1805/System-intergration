@@ -3,7 +3,7 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import type { chat_groups, chat_groupsId } from './chat_groups';
 
 export interface postsAttributes {
-  post_id: number;
+  post_id: string;
   uid?: string;
   user_id?: number;
   org_id?: number;
@@ -17,7 +17,7 @@ export interface postsAttributes {
   type?: 'share' | 'post';
   end_date?: Date;
   start_date?: Date;
-  updated_at?: Date;
+  updated_at: Date;
   from_post?: number;
   content_share?: string;
   photos?: string;
@@ -65,7 +65,7 @@ export class posts
   extends Model<postsAttributes, postsCreationAttributes>
   implements postsAttributes
 {
-  post_id!: number;
+  post_id!: string;
   uid?: string;
   user_id?: number;
   org_id?: number;
@@ -79,7 +79,7 @@ export class posts
   type?: 'share' | 'post';
   end_date?: Date;
   start_date?: Date;
-  updated_at?: Date;
+  updated_at!: Date;
   from_post?: number;
   content_share?: string;
   photos?: string;
@@ -130,7 +130,7 @@ export class posts
       {
         post_id: {
           autoIncrement: true,
-          type: DataTypes.INTEGER,
+          type: DataTypes.STRING,
           allowNull: false,
           primaryKey: true,
         },
@@ -226,6 +226,10 @@ export class posts
         province: {
           type: DataTypes.STRING(45),
           allowNull: true,
+        },
+        updated_at: {
+          type: DataTypes.DATE,
+          allowNull: false,
         },
       },
       {

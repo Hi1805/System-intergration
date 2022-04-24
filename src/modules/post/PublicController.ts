@@ -93,6 +93,8 @@ class PublicController {
           avatar: user.profiles[0].avatar,
           first_name: user.profiles[0].first_name,
           last_name: user.profiles[0].last_name,
+          bio: user.profiles[0].bio,
+          user_address: user.profiles[0].address,
           fullname:
             user.profiles[0].first_name + ' ' + user.profiles[0].last_name,
           photos:

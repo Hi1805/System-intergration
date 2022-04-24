@@ -24,6 +24,7 @@ class KYCUserController {
 
       const kycs = await mainModel.kyc_personal.create({
         ...(req.body as kyc_personalAttributes),
+
         uid,
         status: 'pending',
       });
