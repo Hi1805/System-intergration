@@ -21,6 +21,7 @@ class PrivatePostController {
         content,
         join_url,
         ward,
+        isCreateChat,
       } = req.body;
 
       const posts = await mainModel.posts.create({
@@ -29,7 +30,7 @@ class PrivatePostController {
         title: _toString(title),
         province: _toString(province),
         type: 'post',
-        status: 'active',
+        status: 'activez',
         join_url: _toString(join_url),
         residential_address: _toString(residential_address),
         content: _toString(content),
@@ -40,6 +41,20 @@ class PrivatePostController {
         fullname: _toString(first_name) + ' ' + _toString(last_name),
         updated_at: new Date(),
       });
+
+      Boolean(isCreateChat) &&
+        (await mainModel.config_chat_group.create({
+          avatar: AVATAR_DEFAULT,
+          id: _toString(posts.post_id),
+          name_group: _toString(posts.title),
+        }));
+
+      Boolean(isCreateChat) &&
+        (await mainModel.chat_groups.create({
+          group_chat_id: _toString(posts.post_id),
+          member_uid: uid,
+          for_post: posts.post_id,
+        }));
       return res.status(200).send({
         data: posts.toJSON(),
         message: 'Create post successfully',
