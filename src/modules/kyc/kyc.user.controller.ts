@@ -1,3 +1,4 @@
+import { toNumber } from 'lodash';
 import { kyc_personalAttributes } from './../../database/be_the_heroes/models/kyc_personal';
 import { Request, Response } from 'express';
 import { mainModel } from '../../database/be_the_heroes';
@@ -49,6 +50,7 @@ class KYCUserController {
         where: {
           uid,
         },
+
         order: [['id', 'DESC']],
       });
 
@@ -60,10 +62,17 @@ class KYCUserController {
           },
         });
       }
-
+      const reasons_kyc = await mainModel.reasons_kyc.findOne({
+        where: {
+          reason_id: toNumber(kyc.reason_id),
+        },
+      });
       return res.status(200).json({
         message: 'Success',
-        data: kyc,
+        data: {
+          status: kyc.status,
+          reason: reasons_kyc?.description,
+        },
       });
     } catch (error) {
       console.log(error);
