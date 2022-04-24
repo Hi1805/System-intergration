@@ -213,7 +213,7 @@ class AuthController {
   async getSession(req: Request, res: Response) {
     try {
       const { uid, email } = req.session;
-      const user = <usersAttributes & { profiles: profilesAttributes }>(
+      const user = <usersAttributes & { profiles: profilesAttributes[] }>(
         await mainModel.users
           .findOne({
             where: {
@@ -239,9 +239,9 @@ class AuthController {
       const token = jwt.sign(
         {
           ...user,
-          avatar: user.profiles.avatar,
-          first_name: user.profiles.first_name,
-          last_name: user.profiles.last_name,
+          avatar: user.profiles[0].avatar,
+          first_name: user.profiles[0].first_name,
+          last_name: user.profiles[0].last_name,
         },
         process.env.SECRET_KEY || '',
         {
@@ -254,13 +254,13 @@ class AuthController {
           uid: user.uid,
           email: user.email,
           user_id: user.user_id,
-          first_name: user.profiles.first_name,
-          last_name: user.profiles.last_name,
-          avatar: user.profiles.avatar,
+          first_name: user.profiles[0].first_name,
+          last_name: user.profiles[0].last_name,
+          avatar: user.profiles[0].avatar,
           level: user.level,
           role: user.role,
           is_reported: user.is_reported,
-          date_of_birth: user.profiles.date_of_birth,
+          date_of_birth: user.profiles[0].date_of_birth,
         },
         message: 'Login successfully',
       });
