@@ -17,7 +17,7 @@ class AuthController {
       const { email, accessToken, password: passwordRequest } = req.body;
       const { type } = <{ type: typeAuth }>req.query;
 
-      const user = <usersAttributes & { profiles: profilesAttributes }>(
+      const user = <usersAttributes & { profiles: profilesAttributes[] }>(
         await mainModel.users.findOne({
           where: {
             email: _toString(email).trim(),
@@ -69,14 +69,14 @@ class AuthController {
       return res.status(200).json({
         data: {
           token,
-          first_name: profile.first_name,
-          last_name: profile.last_name,
-          avatar: profile.avatar,
+          first_name: profile[0].first_name,
+          last_name: profile[0].last_name,
+          avatar: profile[0].avatar,
           uid: user.uid,
           level: user.level,
           role: user.role,
           is_reported: user.is_reported,
-          date_of_birth: profile.date_of_birth,
+          date_of_birth: profile[0].date_of_birth,
           email,
         },
         message: 'Login successfully',

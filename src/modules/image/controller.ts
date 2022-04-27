@@ -10,11 +10,12 @@ class ImageController {
         return res.status(400).json({ message: 'File is not found' });
       }
       const promiseFile = files.map((file, index) => {
+        const uid = uuidv1();
+        console.log({ index });
+        console.log('file', file);
         const spaceParams = {
           Bucket: process.env.SPACES_BUCKET || '',
-          Key: `${new Date().getTime() + index}.${
-            file.originalname.split('.')[1]
-          }`,
+          Key: `${uid}.${file.originalname.split('.')[1]}`,
           Body: file.buffer,
           ACL: 'public-read',
           ContentType: 'image/*',
