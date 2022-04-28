@@ -9,7 +9,7 @@ class ImageController {
       if (!files?.length) {
         return res.status(400).json({ message: 'File is not found' });
       }
-      const promiseFile = files.map((file, index) => {
+      const promiseFile = files.map(async (file, index) => {
         const uid = uuidv1();
         console.log({ index });
         console.log('file', file);
@@ -20,7 +20,7 @@ class ImageController {
           ACL: 'public-read',
           ContentType: 'image/*',
         };
-        return spaces
+        return await spaces
           ?.upload(spaceParams)
           .promise()
           .then((res) => res.Location);

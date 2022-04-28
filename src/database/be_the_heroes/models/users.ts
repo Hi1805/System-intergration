@@ -148,12 +148,10 @@ export class users
         uid_gg: {
           type: DataTypes.STRING(200),
           allowNull: true,
-          unique: 'uid_gg_UNIQUE',
         },
         uid_fb: {
           type: DataTypes.STRING(200),
           allowNull: true,
-          unique: 'uid_fb_UNIQUE',
         },
         created_at: {
           type: DataTypes.DATE,

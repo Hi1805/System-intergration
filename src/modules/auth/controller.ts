@@ -144,6 +144,8 @@ class AuthController {
         date_of_birth: _toString(date_of_birth) || new Date().toDateString(),
         avatar: _toString(photo_url) || AVATAR_DEFAULT,
         uid: user_info.uid,
+        updated_at: new Date(),
+        created_at: new Date(),
       });
       const token = jwt.sign(
         {
@@ -169,9 +171,9 @@ class AuthController {
         message: 'Register successfully',
       });
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
       return res.status(500).json({
-        message: error.message,
+        message: 'server Internal',
       });
     }
   }
