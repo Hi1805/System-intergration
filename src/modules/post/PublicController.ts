@@ -90,6 +90,7 @@ class PublicController {
         })) as unknown as userResponse;
         return {
           ...item,
+          level: user.level,
           avatar: user.profiles[0].avatar,
           first_name: user.profiles[0].first_name,
           last_name: user.profiles[0].last_name,
