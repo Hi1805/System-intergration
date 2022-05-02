@@ -1,8 +1,7 @@
 import express from 'express';
-import { privateRoute } from './private';
-import { publicRoute } from './public';
-const apiRouter = express.Router();
+import AppController from '../controllers';
+const appRoute = express.Router();
 
-apiRouter.use(publicRoute, privateRoute);
+appRoute.get('/total-earning', AppController.getTotalEarning);
 
-export default apiRouter;
+export default appRoute;
