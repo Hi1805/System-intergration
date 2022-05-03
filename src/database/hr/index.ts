@@ -5,6 +5,7 @@ const sequelize = new Sequelize('HR', 'sa', 'huy12345', {
   host: 'localhost',
   dialect: 'mssql',
   port: 1433,
+  logging: false,
 });
 const hrModel = initModels(sequelize);
 (async () => {

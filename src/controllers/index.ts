@@ -13,7 +13,7 @@ class AppController {
         ],
       });
 
-      const total_earing = await Promise.all(
+      const list = await Promise.all(
         persons.map(async (person) => {
           const { Employee, Employee_ID } = person;
           const payRates = await payrollModel.pay_rates.findByPk(Employee_ID);
@@ -23,6 +23,7 @@ class AppController {
             return {
               ...Employee.toJSON(),
               earning,
+              ...person.toJSON(),
             };
           }
           return {
@@ -32,11 +33,10 @@ class AppController {
         })
       );
       return res.status(200).json({
-        total_earing,
+        list,
       });
     } catch (err) {
       console.log(err);
-
       return res.status(500).json({
         message: 'Sever Internal Error',
       });
